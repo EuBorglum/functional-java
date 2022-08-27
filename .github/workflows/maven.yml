@@ -25,5 +25,5 @@ jobs:
     - name: Build with Maven
       run: |
         mvn -B package --file pom.xml
-        ls -l $HOME
+        pwd $HOME
       
