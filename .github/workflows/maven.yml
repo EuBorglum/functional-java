@@ -21,17 +21,20 @@ jobs:
     - name: Set up JDK 11
       uses: actions/setup-java@v3
       with:
-        java-version: '11'
+        java-version: '11'	
         distribution: 'adopt'
         cache: maven
         server-id: ossrh
         server-username: SERVER_USERNAME
         server-password: SERVER_PASSWORD
         gpg-passphrase: GPG_PASSPHRASE
-        gpg-private-key: GPG_PRIVATE_KEY
+        gpg-private-key: ${{secrets.GPG_PRIVATE_KEY}}
     
     - name: Build with Maven
       run: |
         cat $HOME/.m2/settings.xml
         mvn -B deploy --file pom.xml
-      
+      env:
+        SERVER_USERNAME: ${{secrets.OSSRH_USERNAME}}
+        SERVER_PASSWORD: ${{secrets.OSSRH_PASSWORD}}
+        GPG_PASSPHRASE: ${{secrets.GPG_PASSPHRASE}}
