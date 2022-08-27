@@ -36,6 +36,7 @@ jobs:
         git config user.email ci@example.com
         git config user.name ci
         mvn -B release:clean release:prepare --file pom.xml
+        mvn -B release:perform --file pom.xml
       env:
         SERVER_USERNAME: ${{secrets.OSSRH_USERNAME}}
         SERVER_PASSWORD: ${{secrets.OSSRH_PASSWORD}}
