@@ -25,6 +25,6 @@ jobs:
     - name: Build with Maven
       run: |
         mvn -B package --file pom.xml
-        cd $HOME./m2
+        cd $HOME/.m2
         cat settings.xml
       
