@@ -33,6 +33,8 @@ jobs:
     - name: Build with Maven
       run: |
         cat $HOME/.m2/settings.xml
+        git config user.email ci@example.com
+        git config user.name ci
         mvn -B release:clean release:prepare --file pom.xml
       env:
         SERVER_USERNAME: ${{secrets.OSSRH_USERNAME}}
