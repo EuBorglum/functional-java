@@ -10,7 +10,7 @@
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>${project.groupId}:${project.artifactId}</description>
-    <url>https://github.com/TomBorglum/functional-java</url>
+    <url>https://github.com/EuBorglum/functional-java</url>
 
     <licenses>
         <license>
@@ -22,16 +22,16 @@
     <developers>
         <developer>
             <name>Tom Børglum Sørensen</name>
-            <email>tom.borglum@gmail.com</email>
+            <email>eu.borglum@gmail.com</email>
             <organization>eu.borglum</organization>
-            <organizationUrl>https://github.com/TomBorglum/functional-java</organizationUrl>
+            <organizationUrl>https://github.com/EuBorglum/functional-java</organizationUrl>
         </developer>
     </developers>
 
     <scm>
-        <connection>scm:git:https://github.com/TomBorglum/functional-java.git</connection>
-        <developerConnection>scm:git:https://github.com/TomBorglum/functional-java.git</developerConnection>
-        <url>https://github.com/TomBorglum/functional-java</url>
+        <connection>scm:git:https://github.com/EuBorglum/functional-java.git</connection>
+        <developerConnection>scm:git:https://github.com/EuBorglum/functional-java.git</developerConnection>
+        <url>https://github.com/EuBorglum/functional-java</url>
         <tag>HEAD</tag>
     </scm>
 
