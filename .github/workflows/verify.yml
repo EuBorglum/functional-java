@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: checkout repository
+    - name: Checkout
       uses: actions/checkout@v3
     
     - name: Set up JDK 11
@@ -29,14 +29,17 @@ jobs:
         server-password: SERVER_PASSWORD
         gpg-passphrase: GPG_PASSPHRASE
         gpg-private-key: ${{secrets.GPG_PRIVATE_KEY}}
-    
-    - name: Build with Maven
-      run: |
-        git config user.email ci@users.noreply.github.com
-        git config user.name ci
-        mvn -B release:clean release:prepare --file pom.xml
-        mvn -B release:perform --file pom.xml
-      env:
-        SERVER_USERNAME: ${{secrets.OSSRH_USERNAME}}
-        SERVER_PASSWORD: ${{secrets.OSSRH_PASSWORD}}
-        GPG_PASSPHRASE: ${{secrets.GPG_PASSPHRASE}}
+
+    - name: Verify
+      run: mvn verify
+
+#    - name: Build with Maven
+#      run: |
+#        git config user.email ci@users.noreply.github.com
+#        git config user.name ci
+#        mvn -B release:clean release:prepare --file pom.xml
+#        mvn -B release:perform --file pom.xml
+#      env:
+#        SERVER_USERNAME: ${{secrets.OSSRH_USERNAME}}
+#        SERVER_PASSWORD: ${{secrets.OSSRH_PASSWORD}}
+#        GPG_PASSPHRASE: ${{secrets.GPG_PASSPHRASE}}
