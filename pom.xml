@@ -52,9 +52,13 @@
         <org.apache.maven.plugins.javadoc.version>3.4.1</org.apache.maven.plugins.javadoc.version>
         <org.apache.maven.plugins.release.version>3.0.0-M6</org.apache.maven.plugins.release.version>
         <org.apache.maven.plugins.source.version>3.2.1</org.apache.maven.plugins.source.version>
+
         <org.sonatype.plugins.nexus-staging.version>1.6.13</org.sonatype.plugins.nexus-staging.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <sonar.organization>euborglum</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
 
     <build>
