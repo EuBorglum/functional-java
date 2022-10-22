@@ -12,5 +12,5 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Echo context
-        run: echo "${{env}}"
+      - name: Echo
+        run: "echo Current branch: ${{github.ref}}"
