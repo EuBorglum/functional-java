@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - name: Check branch
-          if: $GITHUB_REF != 'refs/heads/main'
+          if: github.ref != 'refs/heads/main'
           run: |
             echo "Workflow is only supported for 'refs/heads/main'. Current branch is $GITHUB_REF"
             exit 1
