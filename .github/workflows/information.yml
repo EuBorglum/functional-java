@@ -13,5 +13,5 @@ jobs:
 
     steps:
       - name: Check branch
-        if: github.ref != 'refs/heads/main'
+        if: $GITHUB_REF != 'refs/heads/main'
         run: exit 1
