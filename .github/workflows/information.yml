@@ -13,5 +13,4 @@ jobs:
 
     steps:
       - name: Echo
-        run: |
-          "echo Current branch: ${{github.ref}}"
+        run: "echo Current branch: ${{github.ref}}"
