@@ -12,8 +12,5 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check branch
-        if: github.ref != 'refs/heads/main'
-        run: |
-          echo "Workflow is only supported for 'refs/heads/main'. Current branch is ${{github.ref}}"
-          exit 1
+      - name: Echo context
+        run: echo "${{context}}"
