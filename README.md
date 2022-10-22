@@ -1,3 +1,3 @@
 # functional-java
 
-More information will come
+More information will come later
