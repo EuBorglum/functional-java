@@ -30,13 +30,6 @@ jobs:
         gpg-passphrase: GPG_PASSPHRASE
         gpg-private-key: ${{secrets.GPG_PRIVATE_KEY}}
 
-    - name: Cache SonarCloud packages
-      uses: actions/cache@v1
-      with:
-        path: ~/.sonar/cache
-        key: ${{ runner.os }}-sonar
-        restore-keys: ${{ runner.os }}-sonar
-
     - name: Verify
       run: mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=EuBorglum_functional-java
       env:
