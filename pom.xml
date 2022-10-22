@@ -4,7 +4,7 @@
 
     <groupId>eu.borglum.functional</groupId>
     <artifactId>core</artifactId>
-    <version>0.131-SNAPSHOT</version>
+    <version>0.132-SNAPSHOT</version>
 
     <packaging>jar</packaging>
 
