@@ -13,4 +13,4 @@ jobs:
 
     steps:
       - name: Echo context
-        run: echo "${{context}}"
+        run: echo "${{env}}"
