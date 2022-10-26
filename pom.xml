@@ -47,6 +47,8 @@
     </distributionManagement>
 
     <properties>
+        <org.apache.commons.lang3.version>3.12.0</org.apache.commons.lang3.version>
+
         <org.apache.maven.plugins.compiler.version>3.10.1</org.apache.maven.plugins.compiler.version>
         <org.apache.maven.plugins.clean.version>3.1.0</org.apache.maven.plugins.clean.version>
         <org.apache.maven.plugins.dependency.version>3.2.0</org.apache.maven.plugins.dependency.version>
@@ -90,6 +92,12 @@
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${org.apache.commons.lang3.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
