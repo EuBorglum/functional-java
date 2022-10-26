@@ -49,11 +49,22 @@
 
     <properties>
         <org.apache.maven.plugins.compiler.version>3.10.1</org.apache.maven.plugins.compiler.version>
+        <org.apache.maven.plugins.clean.version>3.1.0</org.apache.maven.plugins.clean.version>
+        <org.apache.maven.plugins.dependency.version>3.2.0</org.apache.maven.plugins.dependency.version>
+        <org.apache.maven.plugins.deploy.version>3.0.0-M1</org.apache.maven.plugins.deploy.version>
+        <org.apache.maven.plugins.enforcer.version>3.0.0</org.apache.maven.plugins.enforcer.version>
+        <org.apache.maven.plugins.failsafe.version>3.0.0-M5</org.apache.maven.plugins.failsafe.version>
         <org.apache.maven.plugins.gpg.version>3.0.1</org.apache.maven.plugins.gpg.version>
+        <org.apache.maven.plugins.help.version>3.2.0</org.apache.maven.plugins.help.version>
+        <org.apache.maven.plugins.install.version>3.0.0-M1</org.apache.maven.plugins.install.version>
         <org.apache.maven.plugins.javadoc.version>3.4.1</org.apache.maven.plugins.javadoc.version>
         <org.apache.maven.plugins.release.version>3.0.0-M6</org.apache.maven.plugins.release.version>
+        <org.apache.maven.plugins.resource.version>3.2.0</org.apache.maven.plugins.resource.version>
         <org.apache.maven.plugins.source.version>3.2.1</org.apache.maven.plugins.source.version>
         <org.apache.maven.plugins.surefire.version>3.0.0-M7</org.apache.maven.plugins.surefire.version>
+
+        <org.codehaus.mojo.enforcer.version>1.6.1</org.codehaus.mojo.enforcer.version>
+        <org.codehaus.mojo.version>2.7</org.codehaus.mojo.version>
 
         <org.jacoco.version>0.8.8</org.jacoco.version>
 
@@ -91,6 +102,11 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>${org.apache.maven.plugins.clean.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${org.apache.maven.plugins.compiler.version}</version>
                 <configuration>
@@ -99,17 +115,65 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>${org.apache.maven.plugins.gpg.version}</version>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>${org.apache.maven.plugins.dependency.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>${org.apache.maven.plugins.deploy.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>${org.apache.maven.plugins.enforcer.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>extra-enforcer-rules</artifactId>
+                        <version>${org.codehaus.mojo.enforcer.version}</version>
+                    </dependency>
+                </dependencies>
                 <executions>
                     <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
+                        <id>enforce-maven</id>
                         <goals>
-                            <goal>sign</goal>
+                            <goal>enforce</goal>
                         </goals>
+                        <configuration>
+                            <rules>
+                                <banDuplicateClasses>
+                                    <findAllDuplicates>true</findAllDuplicates>
+                                    <scopes>
+                                        <scope>compile</scope>
+                                    </scopes>
+                                </banDuplicateClasses>
+                                <requireMavenVersion>
+                                    <version>3.8</version>
+                                </requireMavenVersion>
+                                <requireJavaVersion>
+                                    <version>11</version>
+                                </requireJavaVersion>
+                                <requireProfileIdsExist/>
+                            </rules>
+                        </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${org.apache.maven.plugins.failsafe.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-help-plugin</artifactId>
+                <version>${org.apache.maven.plugins.help.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>${org.apache.maven.plugins.install.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -123,16 +187,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>${org.apache.maven.plugins.release.version}</version>
-                <configuration>
-                    <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <useReleaseProfile>false</useReleaseProfile>
-                    <goals>deploy nexus-staging:release</goals>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -151,6 +205,20 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${org.apache.maven.plugins.surefire.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>${org.apache.maven.plugins.resource.version}</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>${org.codehaus.mojo.version}</version>
+                <configuration>
+                    <generateBackupPoms>false</generateBackupPoms>
+                </configuration>
             </plugin>
 
             <plugin>
@@ -177,19 +245,53 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>${org.sonatype.plugins.nexus-staging.version}</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <serverId>ossrh</serverId>
-                    <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>false</autoReleaseAfterClose>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${org.apache.maven.plugins.gpg.version}</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-release-plugin</artifactId>
+                        <version>${org.apache.maven.plugins.release.version}</version>
+                        <configuration>
+                            <autoVersionSubmodules>true</autoVersionSubmodules>
+                            <useReleaseProfile>false</useReleaseProfile>
+                            <goals>deploy nexus-staging:release</goals>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>${org.sonatype.plugins.nexus-staging.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>false</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
