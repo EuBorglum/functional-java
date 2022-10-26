@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>eu.borglum.functional</groupId>
     <artifactId>core</artifactId>
-    <version>0.132-SNAPSHOT</version>
+    <version>0.132</version>
 
     <packaging>jar</packaging>
 
@@ -33,7 +32,7 @@
         <connection>scm:git:https://github.com/EuBorglum/functional-java.git</connection>
         <developerConnection>scm:git:https://github.com/EuBorglum/functional-java.git</developerConnection>
         <url>https://github.com/EuBorglum/functional-java</url>
-        <tag>HEAD</tag>
+        <tag>core-0.132</tag>
     </scm>
 
     <distributionManagement>
@@ -154,7 +153,7 @@
                                 <requireJavaVersion>
                                     <version>11</version>
                                 </requireJavaVersion>
-                                <requireProfileIdsExist/>
+                                <requireProfileIdsExist />
                             </rules>
                         </configuration>
                     </execution>
