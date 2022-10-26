@@ -34,7 +34,7 @@ jobs:
           gpg-private-key: ${{secrets.GPG_PRIVATE_KEY}}
 
       - name: Verify
-        run: mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=EuBorglum_functional-java
+        run: mvn verify sonar:sonar -Dsonar.projectKey=EuBorglum_functional-java
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           GPG_PASSPHRASE: ${{secrets.GPG_PASSPHRASE}}
