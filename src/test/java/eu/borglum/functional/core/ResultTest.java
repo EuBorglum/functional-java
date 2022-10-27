@@ -20,7 +20,7 @@ class ResultTest {
         throw new RuntimeException("");
     };
 
-    private static final Result<String> EXCEPTION_RESULT = Result.of(() -> {
+    private static final Result<String> EXCEPTION_RESULT = Result.of((Supplier<String>) () -> {
         throw new RuntimeException("");
     });
 
