@@ -3,14 +3,25 @@ package eu.borglum.functional.core;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 
 public class Success<T> implements Result<T> {
 
     private final Optional<T> value;
 
     Success(Optional<T> value) {
-        this.value = value;
+        this.value = Objects.requireNonNull(value);
+    }
+
+    @Override
+    public <U> Result<U> map(Function<? super T, ? extends U> function) {
+        Objects.requireNonNull(function);
+
+        return Result.of(
+            () -> value.map(function)
+        );
     }
 
     @Override

@@ -3,12 +3,20 @@ package eu.borglum.functional.core;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.util.Objects;
+import java.util.function.Function;
+
 public class Failure<T> implements Result<T> {
 
     private final Exception exception;
 
     Failure(Exception exception) {
-        this.exception = exception;
+        this.exception = Objects.requireNonNull(exception);
+    }
+
+    @Override
+    public <U> Result<U> map(Function<? super T, ? extends U> function) {
+        return new Failure<>(exception);
     }
 
     @Override
