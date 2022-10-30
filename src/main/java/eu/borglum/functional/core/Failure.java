@@ -10,12 +10,27 @@ public class Failure<T> implements Result<T> {
 
     private final Exception exception;
 
-    Failure(Exception exception) {
-        this.exception = Objects.requireNonNull(exception);
+    private Failure(Exception exception) {
+        this.exception = exception;
+    }
+
+    static <U> Failure<U> create(Exception exception) {
+        Objects.requireNonNull(exception);
+
+        return new Failure<>(exception);
+    }
+
+    @Override
+    public <U> Result<U> flatMap(Function<? super T, ? extends Result<? extends U>> function) {
+        Objects.requireNonNull(function);
+
+        return new Failure<>(exception);
     }
 
     @Override
     public <U> Result<U> map(Function<? super T, ? extends U> function) {
+        Objects.requireNonNull(function);
+
         return new Failure<>(exception);
     }
 

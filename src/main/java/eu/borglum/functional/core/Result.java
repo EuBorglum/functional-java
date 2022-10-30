@@ -7,6 +7,8 @@ import java.util.function.Supplier;
 
 public interface Result<T> {
 
+    <U> Result<U> flatMap(Function<? super T, ? extends Result<? extends U>> function);
+
     <U> Result<U> map(Function<? super T, ? extends U> function);
 
     static <U> Result<U> of(OptionalSupplier<U> supplier) {
@@ -16,19 +18,22 @@ public interface Result<T> {
         try {
             value = supplier.get();
         } catch (Exception e) {
-            return new Failure<>(e);
+            return Failure.create(e);
         }
 
-        return new Success<>(Objects.requireNonNull(value));
+        return Success.create(value);
     }
 
     static <U> Result<U> of(Supplier<U> supplier) {
         Objects.requireNonNull(supplier);
 
+        U value;
         try {
-            return new Success<>(Optional.ofNullable(supplier.get()));
+            value = supplier.get();
         } catch (Exception e) {
-            return new Failure<>(e);
+            return Failure.create(e);
         }
+
+        return Success.create(value);
     }
 }

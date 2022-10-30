@@ -11,17 +11,61 @@ public class Success<T> implements Result<T> {
 
     private final Optional<T> value;
 
-    Success(Optional<T> value) {
-        this.value = Objects.requireNonNull(value);
+    private Success(Optional<T> value) {
+        this.value = value;
+    }
+
+    static <U> Success<U> create() {
+        return new Success<>(Optional.empty());
+    }
+
+    static <U> Success<U> create(U value) {
+        Objects.requireNonNull(value);
+        return new Success<>(Optional.of(value));
+    }
+
+    static <U> Success<U> create(Optional<U> value) {
+        Objects.requireNonNull(value);
+        return new Success<>(value);
+    }
+
+    @Override
+    public <U> Result<U> flatMap(Function<? super T, ? extends Result<? extends U>> function) {
+        Objects.requireNonNull(function);
+
+        if (value.isPresent()) {
+            Result<U> newResult;
+            try {
+                //noinspection unchecked
+                newResult = (Result<U>) function.apply(value.get());
+            } catch (Exception e) {
+                return Failure.create(e);
+            }
+
+            return Objects.requireNonNull(newResult);
+
+        } else {
+            return Success.create();
+        }
     }
 
     @Override
     public <U> Result<U> map(Function<? super T, ? extends U> function) {
         Objects.requireNonNull(function);
 
-        return Result.of(
-            () -> value.map(function)
-        );
+        if (value.isPresent()) {
+            U newValue;
+            try {
+                newValue = function.apply(value.get());
+            } catch (Exception e) {
+                return Failure.create(e);
+            }
+
+            return Success.create(newValue);
+
+        } else {
+            return Success.create();
+        }
     }
 
     @Override
