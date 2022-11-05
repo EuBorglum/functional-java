@@ -11,7 +11,6 @@ public interface Result<T> {
     /**
      * @param predicate
      * @return
-     *
      * @since 1.0
      */
     Result<T> filter(Predicate<? super T> predicate);

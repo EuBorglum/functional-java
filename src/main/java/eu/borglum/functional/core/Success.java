@@ -63,19 +63,12 @@ public class Success<T> implements Result<T> {
     public <U> Result<U> map(Function<? super T, ? extends U> function) {
         Objects.requireNonNull(function);
 
-        if (value.isPresent()) {
-            U newValue;
-            try {
-                newValue = function.apply(value.get());
-            } catch (Exception e) {
-                return Failure.create(e);
-            }
-
-            return Success.create(newValue);
-
-        } else {
-            return Success.create();
-        }
+        //noinspection unchecked
+        return (Result<U>) value
+            .map(v -> Result.of(
+                () -> function.apply(v)
+            ))
+            .orElseGet(Success::create);
     }
 
     @Override
