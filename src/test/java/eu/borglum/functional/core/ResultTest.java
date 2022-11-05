@@ -1,5 +1,6 @@
 package eu.borglum.functional.core;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -123,6 +124,59 @@ class ResultTest {
             arguments(HELLO_WORLD_RESULT, null),
             arguments(HELLO_WORLD_RESULT, (UnaryOperator<String>) str -> null),
             arguments(EXCEPTION_OPTIONAL_RESULT, null)
+        );
+    }
+
+    /**
+     * If you have a box (monad) and a chain of functions that operates on it as the previous two did, then it
+     * should not matter how you nest the flatMappings of those functions.
+     *
+     * @see <a href=https://miklos-martin.github.io/learn/fp/2016/03/10/monad-laws-for-regular-developers.html/>
+     */
+    @Test
+    void testMonadLawAssociativity() {
+        //given
+        Function<String, Result<String>> toLowerCase = str -> Result.of((Supplier<String>) str::toLowerCase);
+
+        //then
+        assertEquals(
+            HELLO_WORLD_RESULT.flatMap(FLAT_MAP_TO_UPPER_CASE).flatMap(toLowerCase),
+            HELLO_WORLD_RESULT.flatMap(
+                str -> FLAT_MAP_TO_UPPER_CASE.apply(str).flatMap(toLowerCase)
+            )
+        );
+    }
+
+    /**
+     * If you have a box (monad) with a value in it and a function that takes the same type of value and returns
+     * the same type of box, then flatMapping it on the box or just simply applying it to the value should yield
+     * the same result.
+     *
+     * @see <a href=https://miklos-martin.github.io/learn/fp/2016/03/10/monad-laws-for-regular-developers.html/>
+     */
+    @Test
+    void testMonadLawLeftIdentity() {
+        //then
+        assertEquals(
+            HELLO_WORLD_RESULT.flatMap(FLAT_MAP_TO_UPPER_CASE), FLAT_MAP_TO_UPPER_CASE.apply("Hello world")
+        );
+    }
+
+    /**
+     * If you have a box (monad) with a value in it and you have a function that takes the same type of value and
+     * wraps it in the same kind of box untouched, then after flatMapping that function on your box should not
+     * change it.
+     *
+     * @see <a href=https://miklos-martin.github.io/learn/fp/2016/03/10/monad-laws-for-regular-developers.html/>
+     */
+    @Test
+    void testMonadLawRightIdentity() {
+        //when
+        Function<String, Result<String>> wrapInResult = str -> Result.of(() -> str);
+
+        //then
+        assertEquals(
+            HELLO_WORLD_RESULT, HELLO_WORLD_RESULT.flatMap(wrapInResult)
         );
     }
 

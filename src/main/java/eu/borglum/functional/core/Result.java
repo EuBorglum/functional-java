@@ -7,10 +7,31 @@ import java.util.function.Supplier;
 
 public interface Result<T> {
 
+    /**
+     * @param function
+     * @param <U>
+     * @return
+     *
+     * @since 1.0
+     */
     <U> Result<U> flatMap(Function<? super T, ? extends Result<? extends U>> function);
 
+    /**
+     * @param function
+     * @param <U>
+     * @return
+     *
+     * @since 1.0
+     */
     <U> Result<U> map(Function<? super T, ? extends U> function);
 
+    /**
+     * @param supplier
+     * @param <U>
+     * @return
+     *
+     * @since 1.0
+     */
     static <U> Result<U> of(OptionalSupplier<U> supplier) {
         Objects.requireNonNull(supplier);
 
@@ -24,6 +45,13 @@ public interface Result<T> {
         return Success.create(value);
     }
 
+    /**
+     * @param supplier
+     * @param <U>
+     * @return
+     *
+     * @since 1.0
+     */
     static <U> Result<U> of(Supplier<U> supplier) {
         Objects.requireNonNull(supplier);
 
