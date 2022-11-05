@@ -8,6 +8,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
@@ -18,16 +19,22 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class ResultTest {
 
+    private static final RuntimeException FIXED_EXCEPTION = new RuntimeException("");
+
     private static final Result<String> EMPTY_RESULT = Result.of((OptionalSupplier<String>) Optional::empty);
 
-    private static final Result<String> EXCEPTION_OPTIONAL_RESULT = Result.of(() -> Optional.of(
+    private static final Result<String> FIXED_EXCEPTION_OPTIONAL_RESULT = Result.of(() -> Optional.of(
         ((Supplier<String>) () -> {
-            throw new RuntimeException("");
+            throw FIXED_EXCEPTION;
         }).get()
     ));
 
-    private static final Function<String, Result<String>> FLAT_MAP_AND_THROW_EXCEPTION = str -> {
-        throw new RuntimeException("");
+    private static final Predicate<String> FILTER_AND_THROW_FIXED_EXCEPTION = str -> {
+        throw FIXED_EXCEPTION;
+    };
+
+    private static final Function<String, Result<String>> FLAT_MAP_AND_THROW_FIXED_EXCEPTION = str -> {
+        throw FIXED_EXCEPTION;
     };
 
     private static final Function<String, Result<String>> FLAT_MAP_TO_UPPER_CASE =
@@ -37,59 +44,100 @@ class ResultTest {
 
     private static final Result<String> HELLO_WORLD_OPTIONAL_RESULT = Result.of(() -> Optional.of("Hello world"));
 
-    private static final UnaryOperator<String> MAP_AND_THROW_EXCEPTION = str -> {
-        throw new RuntimeException("");
+    private static final UnaryOperator<String> MAP_AND_THROW_FIXED_EXCEPTION = str -> {
+        throw FIXED_EXCEPTION;
     };
 
     private static final UnaryOperator<String> MAP_TO_UPPER_CASE = String::toUpperCase;
 
-    private static final Supplier<Result<String>> SUPPLY_EXCEPTION_RESULT = () ->
+    private static final Supplier<Result<String>> SUPPLY_UNIQUE_EXCEPTION_RESULT = () ->
         Result.of((Supplier<String>) () -> {
             throw new RuntimeException(UUID.randomUUID().toString());
         });
 
     @ParameterizedTest
-    @MethodSource("provideTestFlatMap")
-    void testFlatMap(Result<String> initial, Result<String> expected, boolean isEqual) {
+    @MethodSource("provideFilter")
+    void testFilter(Result<String> initial, Result<String> expected, boolean isEqual) {
 
         //when
-        Result<String> actual = initial.flatMap(str -> Result.of((Supplier<String>) str::toUpperCase));
+        Result<String> actual = initial.filter("Hello world"::equals);
 
         //then
         assertEquals(isEqual, expected.equals(actual));
     }
 
-    private static Stream<Arguments> provideTestFlatMap() {
+    private static Stream<Arguments> provideFilter() {
+        return Stream.of(
+            arguments(HELLO_WORLD_RESULT, HELLO_WORLD_RESULT, true),
+            arguments(HELLO_WORLD_RESULT, EMPTY_RESULT, false),
+            arguments(HELLO_WORLD_RESULT.map(MAP_TO_UPPER_CASE), EMPTY_RESULT, true),
+            arguments(FIXED_EXCEPTION_OPTIONAL_RESULT, FIXED_EXCEPTION_OPTIONAL_RESULT, true),
+            arguments(EMPTY_RESULT, EMPTY_RESULT, true),
+            arguments(
+                HELLO_WORLD_RESULT.filter(FILTER_AND_THROW_FIXED_EXCEPTION), FIXED_EXCEPTION_OPTIONAL_RESULT, true
+            )
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideFilterInvalid")
+    void testFilterInvalid(Result<String> initial, Predicate<String> invalid) {
+
+        //then
+        assertThrows(NullPointerException.class, () -> initial.filter(invalid));
+    }
+
+    private static Stream<Arguments> provideFilterInvalid() {
+        return Stream.of(
+            arguments(HELLO_WORLD_RESULT, null),
+            arguments(FIXED_EXCEPTION_OPTIONAL_RESULT, null)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideFlatMap")
+    void testFlatMap(Result<String> initial, Result<String> expected, boolean isEqual) {
+
+        //when
+        Result<String> actual = initial.flatMap(FLAT_MAP_TO_UPPER_CASE);
+
+        //then
+        assertEquals(isEqual, expected.equals(actual));
+    }
+
+    private static Stream<Arguments> provideFlatMap() {
         return Stream.of(
             arguments(HELLO_WORLD_RESULT, HELLO_WORLD_RESULT, false),
             arguments(HELLO_WORLD_RESULT, Result.of(() -> "HELLO WORLD"), true),
             arguments(HELLO_WORLD_RESULT, HELLO_WORLD_RESULT.flatMap(FLAT_MAP_TO_UPPER_CASE), true),
             arguments(EMPTY_RESULT, EMPTY_RESULT.flatMap(FLAT_MAP_TO_UPPER_CASE), true),
-            arguments(HELLO_WORLD_RESULT, HELLO_WORLD_RESULT.flatMap(FLAT_MAP_AND_THROW_EXCEPTION), false),
+            arguments(HELLO_WORLD_RESULT, HELLO_WORLD_RESULT.flatMap(FLAT_MAP_AND_THROW_FIXED_EXCEPTION), false),
             arguments(
-                SUPPLY_EXCEPTION_RESULT.get(), SUPPLY_EXCEPTION_RESULT.get().flatMap(FLAT_MAP_TO_UPPER_CASE), false
+                SUPPLY_UNIQUE_EXCEPTION_RESULT.get(),
+                SUPPLY_UNIQUE_EXCEPTION_RESULT.get().flatMap(FLAT_MAP_TO_UPPER_CASE),
+                false
             )
         );
     }
 
     @ParameterizedTest
     @MethodSource("provideFlatMapInvalid")
-    void testFlatMapInvalid(Result<String> initialResult, Function<String, Result<String>> invalidFunction) {
+    void testFlatMapInvalid(Result<String> initial, Function<String, Result<String>> invalid) {
 
         //then
-        assertThrows(NullPointerException.class, () -> initialResult.flatMap(invalidFunction));
+        assertThrows(NullPointerException.class, () -> initial.flatMap(invalid));
     }
 
     private static Stream<Arguments> provideFlatMapInvalid() {
         return Stream.of(
             arguments(HELLO_WORLD_RESULT, null),
             arguments(HELLO_WORLD_RESULT, (Function<String, Result<String>>) str -> null),
-            arguments(EXCEPTION_OPTIONAL_RESULT, null)
+            arguments(FIXED_EXCEPTION_OPTIONAL_RESULT, null)
         );
     }
 
     @ParameterizedTest
-    @MethodSource("provideTestMap")
+    @MethodSource("provideMap")
     void testMap(Result<String> initial, Result<String> expected, boolean isEqual) {
 
         //when
@@ -99,31 +147,39 @@ class ResultTest {
         assertEquals(isEqual, expected.equals(actual));
     }
 
-    private static Stream<Arguments> provideTestMap() {
+    private static Stream<Arguments> provideMap() {
         return Stream.of(
             arguments(HELLO_WORLD_RESULT, HELLO_WORLD_RESULT, false),
             arguments(HELLO_WORLD_RESULT, Result.of(() -> "HELLO WORLD"), true),
             arguments(HELLO_WORLD_RESULT, HELLO_WORLD_RESULT.map(MAP_TO_UPPER_CASE), true),
             arguments(EMPTY_RESULT, EMPTY_RESULT.map(MAP_TO_UPPER_CASE), true),
-            arguments(HELLO_WORLD_RESULT, HELLO_WORLD_RESULT.map(MAP_AND_THROW_EXCEPTION), false),
-            arguments(SUPPLY_EXCEPTION_RESULT.get(), SUPPLY_EXCEPTION_RESULT.get().map(MAP_TO_UPPER_CASE), false),
-            arguments(SUPPLY_EXCEPTION_RESULT.get(), SUPPLY_EXCEPTION_RESULT.get().map(str -> null), false)
+            arguments(HELLO_WORLD_RESULT, HELLO_WORLD_RESULT.map(MAP_AND_THROW_FIXED_EXCEPTION), false),
+            arguments(
+                SUPPLY_UNIQUE_EXCEPTION_RESULT.get(),
+                SUPPLY_UNIQUE_EXCEPTION_RESULT.get().map(MAP_TO_UPPER_CASE),
+                false
+            ),
+            arguments(
+                SUPPLY_UNIQUE_EXCEPTION_RESULT.get(),
+                SUPPLY_UNIQUE_EXCEPTION_RESULT.get().map(str -> null),
+                false
+            )
         );
     }
 
     @ParameterizedTest
     @MethodSource("provideMapInvalid")
-    void testMapInvalid(Result<String> initialResult, UnaryOperator<String> invalidFunction) {
+    void testMapInvalid(Result<String> initial, UnaryOperator<String> invalid) {
 
         //then
-        assertThrows(NullPointerException.class, () -> initialResult.map(invalidFunction));
+        assertThrows(NullPointerException.class, () -> initial.map(invalid));
     }
 
     private static Stream<Arguments> provideMapInvalid() {
         return Stream.of(
             arguments(HELLO_WORLD_RESULT, null),
             arguments(HELLO_WORLD_RESULT, (UnaryOperator<String>) str -> null),
-            arguments(EXCEPTION_OPTIONAL_RESULT, null)
+            arguments(FIXED_EXCEPTION_OPTIONAL_RESULT, null)
         );
     }
 
@@ -181,7 +237,7 @@ class ResultTest {
     }
 
     @ParameterizedTest
-    @MethodSource("provideTestOf")
+    @MethodSource("provideOf")
     void testOf(Result<String> expected, boolean isEqual) {
 
         //then
@@ -189,22 +245,22 @@ class ResultTest {
     }
 
     @ParameterizedTest
-    @MethodSource("provideTestOf")
+    @MethodSource("provideOf")
     void testOfOptional(Result<String> expected, boolean isEqual) {
 
         //then
         assertEquals(isEqual, expected.equals(HELLO_WORLD_OPTIONAL_RESULT));
     }
 
-    private static Stream<Arguments> provideTestOf() {
+    private static Stream<Arguments> provideOf() {
         return Stream.of(
             arguments(HELLO_WORLD_RESULT, true),
             arguments(HELLO_WORLD_OPTIONAL_RESULT, true),
             arguments(Result.of(() -> "Other"), false),
             arguments(Result.of(() -> Optional.of("Other")), false),
             arguments(EMPTY_RESULT, false),
-            arguments(SUPPLY_EXCEPTION_RESULT.get(), false),
-            arguments(EXCEPTION_OPTIONAL_RESULT, false)
+            arguments(SUPPLY_UNIQUE_EXCEPTION_RESULT.get(), false),
+            arguments(FIXED_EXCEPTION_OPTIONAL_RESULT, false)
         );
     }
 

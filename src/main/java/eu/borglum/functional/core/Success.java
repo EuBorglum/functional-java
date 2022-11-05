@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class Success<T> implements Result<T> {
 
@@ -27,6 +28,15 @@ public class Success<T> implements Result<T> {
     static <U> Success<U> create(Optional<U> value) {
         Objects.requireNonNull(value);
         return new Success<>(value);
+    }
+
+    @Override
+    public Result<T> filter(Predicate<? super T> predicate) {
+        Objects.requireNonNull(predicate);
+
+        return Result.of(
+            () -> value.filter(predicate)
+        );
     }
 
     @Override

@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class Failure<T> implements Result<T> {
 
@@ -21,17 +22,24 @@ public class Failure<T> implements Result<T> {
     }
 
     @Override
+    public Result<T> filter(Predicate<? super T> predicate) {
+        Objects.requireNonNull(predicate);
+
+        return create(exception);
+    }
+
+    @Override
     public <U> Result<U> flatMap(Function<? super T, ? extends Result<? extends U>> function) {
         Objects.requireNonNull(function);
 
-        return new Failure<>(exception);
+        return create(exception);
     }
 
     @Override
     public <U> Result<U> map(Function<? super T, ? extends U> function) {
         Objects.requireNonNull(function);
 
-        return new Failure<>(exception);
+        return create(exception);
     }
 
     @Override
