@@ -65,7 +65,7 @@
         <org.apache.maven.plugins.surefire.version>3.0.0-M7</org.apache.maven.plugins.surefire.version>
 
         <org.codehaus.mojo.enforcer.version>1.6.1</org.codehaus.mojo.enforcer.version>
-        <org.codehaus.mojo.version>2.7</org.codehaus.mojo.version>
+        <org.codehaus.mojo.version>2.13.0</org.codehaus.mojo.version>
 
         <org.jacoco.version>0.8.8</org.jacoco.version>
 
