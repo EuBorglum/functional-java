@@ -35,7 +35,8 @@ public interface Result<T> {
      * @param function the {@link Function} to apply
      * @param <U>      the type of the value of the {@link Result} returned by the {@link Function}
      * @return a new {@link Result} after the {@link Function} has been applied
-     * @throws NullPointerException if the {@link Function} is {@code null}
+     * @throws NullPointerException if the {@link Function} is {@code null} or if the {@link Result} is
+     *                              currently a {@code success} and the {@link Function} returns {@code null}
      * @since 1.0
      */
     <U> Result<U> flatMap(Function<? super T, ? extends Result<? extends U>> function);
@@ -50,7 +51,8 @@ public interface Result<T> {
      * @param function the {@link Function} to apply
      * @param <U>      the type of the value returned by the {@link Function}
      * @return a new {@link Result} after the {@link Function} has been applied
-     * @throws NullPointerException if the {@link Function} is {@code null}
+     * @throws NullPointerException if the {@link Function} is {@code null} or if the {@link Result} is
+     *                              currently a {@code success} and the {@link Function} returns {@code null}
      * @since 1.0
      */
     <U> Result<U> map(Function<? super T, ? extends U> function);
@@ -68,7 +70,8 @@ public interface Result<T> {
      * @param function the {@link OptionalFunction} to apply
      * @param <U>      the type of the value of the {@link Optional} returned by the {@link OptionalFunction}
      * @return a new {@link Result} after the {@link OptionalFunction} has been applied
-     * @throws NullPointerException if the {@link OptionalFunction} is {@code null}
+     * @throws NullPointerException if the {@link OptionalFunction} is {@code null} or if the {@link Result} is
+     *                              currently a {@code success} and the {@link OptionalFunction} returns {@code null}
      * @since 1.0
      */
     <U> Result<U> map(OptionalFunction<? super T, ? extends U> function);
@@ -79,7 +82,8 @@ public interface Result<T> {
      * @param supplier the {@link OptionalSupplier} to apply
      * @param <U>      the type of the value of the {@link Optional} returned by the {@link OptionalSupplier}
      * @return the {@link Result} of applying the {@link OptionalSupplier}
-     * @throws NullPointerException if the {@link OptionalSupplier} is {@code null}
+     * @throws NullPointerException if the {@link OptionalSupplier} is {@code null} or if the {@link OptionalSupplier}
+     *                              returns {@code null}
      * @since 1.0
      */
     static <U> Result<U> of(OptionalSupplier<U> supplier) {
@@ -101,7 +105,8 @@ public interface Result<T> {
      * @param supplier the {@link Supplier} to apply
      * @param <U>      the type of the value returned by the {@link Supplier}
      * @return the {@link Result} of applying the {@link Supplier}
-     * @throws NullPointerException if the {@link Supplier} is {@code null}
+     * @throws NullPointerException if the {@link Supplier} is {@code null} or if the {@link Supplier} returns
+     *                              {@code null}
      * @since 1.0
      */
     static <U> Result<U> of(Supplier<U> supplier) {
