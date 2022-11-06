@@ -43,6 +43,13 @@ public class Failure<T> implements Result<T> {
     }
 
     @Override
+    public <U> Result<U> map(OptionalFunction<? super T, ? extends U> function) {
+        Objects.requireNonNull(function);
+
+        return create(exception);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
 

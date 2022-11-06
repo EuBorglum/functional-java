@@ -32,6 +32,14 @@ public interface Result<T> {
     <U> Result<U> map(Function<? super T, ? extends U> function);
 
     /**
+     * @param function
+     * @param <U>
+     * @return
+     * @sinc 1.0
+     */
+    <U> Result<U> map(OptionalFunction<? super T, ? extends U> function);
+
+    /**
      * @param supplier
      * @param <U>
      * @return

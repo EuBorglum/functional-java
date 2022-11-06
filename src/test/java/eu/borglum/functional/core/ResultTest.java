@@ -21,7 +21,7 @@ class ResultTest {
 
     private static final RuntimeException FIXED_EXCEPTION = new RuntimeException("");
 
-    private static final Result<String> EMPTY_RESULT = Result.of((OptionalSupplier<String>) Optional::empty);
+    private static final Result<String> EMPTY_RESULT = Result.of(Optional::empty);
 
     private static final Result<String> FIXED_EXCEPTION_OPTIONAL_RESULT = Result.of(() -> Optional.of(
         ((Supplier<String>) () -> {
@@ -48,7 +48,14 @@ class ResultTest {
         throw FIXED_EXCEPTION;
     };
 
+    private static final OptionalFunction<String, Optional<String>> MAP_AND_THROW_OPTIONAL_FIXED_EXCEPTION = str -> {
+        throw FIXED_EXCEPTION;
+    };
+
     private static final UnaryOperator<String> MAP_TO_UPPER_CASE = String::toUpperCase;
+
+    private static final OptionalUnaryOperator<String> MAP_TO_OPTIONAL_UPPER_CASE =
+        str -> Optional.of(str.toUpperCase());
 
     private static final Supplier<Result<String>> SUPPLY_UNIQUE_EXCEPTION_RESULT = () ->
         Result.of((Supplier<String>) () -> {
@@ -152,8 +159,11 @@ class ResultTest {
             arguments(HELLO_WORLD_RESULT, HELLO_WORLD_RESULT, false),
             arguments(HELLO_WORLD_RESULT, Result.of(() -> "HELLO WORLD"), true),
             arguments(HELLO_WORLD_RESULT, HELLO_WORLD_RESULT.map(MAP_TO_UPPER_CASE), true),
+            arguments(HELLO_WORLD_RESULT, HELLO_WORLD_RESULT.map(MAP_TO_OPTIONAL_UPPER_CASE), true),
             arguments(EMPTY_RESULT, EMPTY_RESULT.map(MAP_TO_UPPER_CASE), true),
+            arguments(EMPTY_RESULT, EMPTY_RESULT.map(MAP_TO_OPTIONAL_UPPER_CASE), true),
             arguments(HELLO_WORLD_RESULT, HELLO_WORLD_RESULT.map(MAP_AND_THROW_FIXED_EXCEPTION), false),
+            arguments(HELLO_WORLD_RESULT, HELLO_WORLD_RESULT.map(MAP_AND_THROW_OPTIONAL_FIXED_EXCEPTION), false),
             arguments(
                 SUPPLY_UNIQUE_EXCEPTION_RESULT.get(),
                 SUPPLY_UNIQUE_EXCEPTION_RESULT.get().map(MAP_TO_UPPER_CASE),
@@ -161,7 +171,17 @@ class ResultTest {
             ),
             arguments(
                 SUPPLY_UNIQUE_EXCEPTION_RESULT.get(),
-                SUPPLY_UNIQUE_EXCEPTION_RESULT.get().map(str -> null),
+                SUPPLY_UNIQUE_EXCEPTION_RESULT.get().map(MAP_TO_OPTIONAL_UPPER_CASE),
+                false
+            ),
+            arguments(
+                SUPPLY_UNIQUE_EXCEPTION_RESULT.get(),
+                SUPPLY_UNIQUE_EXCEPTION_RESULT.get().map((UnaryOperator<String>) str -> null),
+                false
+            ),
+            arguments(
+                SUPPLY_UNIQUE_EXCEPTION_RESULT.get(),
+                SUPPLY_UNIQUE_EXCEPTION_RESULT.get().map((OptionalFunction<String, Optional<String>>) str -> null),
                 false
             )
         );
@@ -179,6 +199,23 @@ class ResultTest {
         return Stream.of(
             arguments(HELLO_WORLD_RESULT, null),
             arguments(HELLO_WORLD_RESULT, (UnaryOperator<String>) str -> null),
+            arguments(FIXED_EXCEPTION_OPTIONAL_RESULT, null)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideMapOptionalInvalid")
+    void testMapOptionalInvalid(Result<String> initial, OptionalFunction<String, String> invalid) {
+
+        //then
+        assertThrows(NullPointerException.class, () -> initial.map(invalid));
+    }
+
+    private static Stream<Arguments> provideMapOptionalInvalid() {
+        return Stream.of(
+            arguments(HELLO_WORLD_RESULT, null),
+            arguments(HELLO_WORLD_RESULT, (OptionalFunction<String, String>) str -> null),
+            arguments(HELLO_WORLD_RESULT, (OptionalUnaryOperator<String>) str -> null),
             arguments(FIXED_EXCEPTION_OPTIONAL_RESULT, null)
         );
     }

@@ -72,6 +72,18 @@ public class Success<T> implements Result<T> {
     }
 
     @Override
+    public <U> Result<U> map(OptionalFunction<? super T, ? extends U> function) {
+        Objects.requireNonNull(function);
+
+        //noinspection unchecked
+        return (Result<U>) value
+            .map(v -> Result.of(
+                () -> function.apply(v)
+            ))
+            .orElseGet(Success::create);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
 
