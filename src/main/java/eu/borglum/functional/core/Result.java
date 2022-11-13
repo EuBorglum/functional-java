@@ -121,4 +121,13 @@ public interface Result<T> {
 
         return Success.create(value);
     }
+
+    /**
+     * @param exceptionClass
+     * @param function
+     * @param <X>
+     * @return
+     * @since 1.0
+     */
+    <X extends Exception> Result<T> recover(Class<X> exceptionClass, Function<? super X, ? extends T> function);
 }

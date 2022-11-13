@@ -102,4 +102,12 @@ public class Success<T> implements Result<T> {
             .append(value)
             .toHashCode();
     }
+
+    @Override
+    public <X extends Exception> Result<T> recover(Class<X> exceptionClass, Function<? super X, ? extends T> function) {
+        Objects.requireNonNull(exceptionClass);
+        Objects.requireNonNull(function);
+
+        return create(value);
+    }
 }

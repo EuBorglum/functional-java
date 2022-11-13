@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -67,5 +68,19 @@ public class Failure<T> implements Result<T> {
         return new HashCodeBuilder(17, 37)
             .append(exception)
             .toHashCode();
+    }
+
+    @Override
+    public <X extends Exception> Result<T> recover(Class<X> exceptionClass, Function<? super X, ? extends T> function) {
+        Objects.requireNonNull(exceptionClass);
+        Objects.requireNonNull(function);
+
+        //noinspection unchecked
+        return (Result<T>) Optional
+            .of(exception)
+            .filter(ex -> exceptionClass.isAssignableFrom(ex.getClass()))
+            .map(exceptionClass::cast)
+            .map(ex -> Result.of(() -> function.apply(ex)))
+            .orElseGet(() -> Failure.create(exception));
     }
 }
