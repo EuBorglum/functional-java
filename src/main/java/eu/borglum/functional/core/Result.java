@@ -130,4 +130,13 @@ public interface Result<T> {
      * @since 1.0
      */
     <X extends Exception> Result<T> recover(Class<X> exceptionClass, Function<? super X, ? extends T> function);
+
+    /**
+     * @param exceptionClass
+     * @param function
+     * @param <X>
+     * @return
+     * @since 1.0
+     */
+    <X extends Exception> Result<T> recover(Class<X> exceptionClass, OptionalFunction<? super X, ? extends T> function);
 }
