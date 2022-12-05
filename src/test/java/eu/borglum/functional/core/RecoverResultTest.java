@@ -11,6 +11,8 @@ import java.util.stream.Stream;
 
 import static eu.borglum.functional.core.TestDataFactory.create;
 import static eu.borglum.functional.core.TestDataFactory.recover;
+import static eu.borglum.functional.core.TestDataFactory.recoverOptional;
+import static eu.borglum.functional.core.TestDataFactory.recoverOptionalAndThrow;
 import static eu.borglum.functional.core.TestDataFactory.recoverToNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;

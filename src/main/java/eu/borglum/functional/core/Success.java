@@ -127,16 +127,14 @@ public class Success<T> implements InternalResult<T>, Result<T> {
 
     @Override
     public <X extends Exception> Result<T> recover(Class<X> exceptionClass, Function<? super X, ? extends T> function) {
-        Objects.requireNonNull(exceptionClass);
-        Objects.requireNonNull(function);
+        validateRecover(exceptionClass, function);
 
         return create(value);
     }
 
     @Override
     public <X extends Exception> Result<T> recover(Class<X> exceptionClass, OptionalFunction<? super X, ? extends T> function) {
-        Objects.requireNonNull(exceptionClass);
-        Objects.requireNonNull(function);
+        validateRecover(exceptionClass, function);
 
         return create(value);
     }
@@ -146,5 +144,10 @@ public class Success<T> implements InternalResult<T>, Result<T> {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
             .append("value", value)
             .toString();
+    }
+
+    private <X extends Exception> void validateRecover(Class<X> exceptionClass, Function<?, ?> function) {
+        Objects.requireNonNull(exceptionClass);
+        Objects.requireNonNull(function);
     }
 }
