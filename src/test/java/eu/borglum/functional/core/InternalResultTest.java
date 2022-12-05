@@ -22,9 +22,6 @@ class InternalResultTest {
 
         //then
         assertEquals(ILLEGAL_STATE_EXCEPTION, result.getCause());
-
-        IllegalStateException actual = assertThrows(IllegalStateException.class, result::getValue);
-        assertEquals(ILLEGAL_STATE_EXCEPTION, actual);
     }
 
     @Test
