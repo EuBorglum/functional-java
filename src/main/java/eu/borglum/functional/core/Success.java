@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class Success<T> implements Result<T> {
+public class Success<T> implements InternalResult<T>, Result<T> {
 
     private final Optional<T> value;
 
@@ -67,6 +67,16 @@ public class Success<T> implements Result<T> {
     @Override
     public boolean isSuccess() {
         return true;
+    }
+
+    @Override
+    public Exception getCause() {
+        throw new UnsupportedOperationException("A success does not contain a cause of failure");
+    }
+
+    @Override
+    public Optional<T> getValue() {
+        return value;
     }
 
     @Override

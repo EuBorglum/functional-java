@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class Failure<T> implements Result<T> {
+public class Failure<T> implements InternalResult<T>, Result<T> {
 
     private final Exception exception;
 
@@ -44,6 +44,16 @@ public class Failure<T> implements Result<T> {
     @Override
     public boolean isSuccess() {
         return false;
+    }
+
+    @Override
+    public Exception getCause() {
+        return exception;
+    }
+
+    @Override
+    public Optional<T> getValue() {
+        return throwException();
     }
 
     @Override
@@ -92,5 +102,10 @@ public class Failure<T> implements Result<T> {
             .map(exceptionClass::cast)
             .map(ex -> Result.of(() -> function.apply(ex)))
             .orElseGet(() -> Failure.create(exception));
+    }
+
+    private <E extends Exception> Optional<T> throwException() throws E {
+        //noinspection unchecked
+        throw (E) exception;
     }
 }
