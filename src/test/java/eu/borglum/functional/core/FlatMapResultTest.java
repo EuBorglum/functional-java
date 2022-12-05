@@ -9,7 +9,6 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static eu.borglum.functional.core.TestDataFactory.create;
-import static eu.borglum.functional.core.TestDataFactory.createAndThrow;
 import static eu.borglum.functional.core.TestDataFactory.flatMapAndThrow;
 import static eu.borglum.functional.core.TestDataFactory.flatMapOf;
 import static eu.borglum.functional.core.TestDataFactory.flatMapToNull;
@@ -38,7 +37,7 @@ class FlatMapResultTest {
 
     private static Stream<Arguments> provideFlatMap() {
         Result<String> empty = create();
-        Result<String> illegalState = createAndThrow(ILLEGAL_STATE_EXCEPTION);
+        Result<String> illegalState = create(ILLEGAL_STATE_EXCEPTION);
         Result<String> value = create("Value");
         Result<String> valueUpperCase = create("VALUE");
 
@@ -68,7 +67,7 @@ class FlatMapResultTest {
     }
 
     private static Stream<Arguments> provideFlatMapInvalid() {
-        Result<String> illegalState = createAndThrow(ILLEGAL_STATE_EXCEPTION);
+        Result<String> illegalState = create(ILLEGAL_STATE_EXCEPTION);
         Result<String> value = create("Value");
 
         return Stream.of(

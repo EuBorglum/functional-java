@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import java.util.Optional;
 
 import static eu.borglum.functional.core.TestDataFactory.create;
-import static eu.borglum.functional.core.TestDataFactory.createAndThrow;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -19,7 +18,7 @@ class InternalResultTest {
     @Test
     void testGetCauseWhenFailure() {
         //when
-        InternalResult<String> result = InternalResult.of(createAndThrow(ILLEGAL_STATE_EXCEPTION));
+        InternalResult<String> result = InternalResult.of(create(ILLEGAL_STATE_EXCEPTION));
 
         //then
         assertEquals(ILLEGAL_STATE_EXCEPTION, result.getCause());
@@ -40,7 +39,7 @@ class InternalResultTest {
     @Test
     void testGetValueWhenFailure() {
         //when
-        InternalResult<String> result = InternalResult.of(createAndThrow(ILLEGAL_STATE_EXCEPTION));
+        InternalResult<String> result = InternalResult.of(create(ILLEGAL_STATE_EXCEPTION));
 
         //then
         IllegalStateException actual = assertThrows(IllegalStateException.class, result::getValue);
@@ -59,7 +58,7 @@ class InternalResultTest {
     @Test
     void testIsFailure() {
         //when
-        InternalResult<String> result = InternalResult.of(createAndThrow(ILLEGAL_STATE_EXCEPTION));
+        InternalResult<String> result = InternalResult.of(create(ILLEGAL_STATE_EXCEPTION));
 
         //then
         assertAll(

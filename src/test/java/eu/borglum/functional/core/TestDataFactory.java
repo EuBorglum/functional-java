@@ -1,7 +1,10 @@
 package eu.borglum.functional.core;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 class TestDataFactory {
 
@@ -17,10 +20,55 @@ class TestDataFactory {
         return Result.of(() -> value);
     }
 
-    static Result<String> createAndThrow(RuntimeException exception) {
+    static Result<String> create(RuntimeException exception) {
         return Result.of(() -> {
             throw exception;
         });
+    }
+
+    static Result<List<String>> create(List<String> values) {
+        return Result.of(() -> values);
+    }
+
+    static List<Result<String>> createList(List<String> values) {
+        return values
+            .stream()
+            .map(TestDataFactory::create)
+            .collect(Collectors.toList());
+    }
+
+    static List<Result<String>> createList(RuntimeException exception, List<String> values) {
+        return Stream
+            .concat(
+                Stream
+                    .of(exception)
+                    .map(TestDataFactory::create),
+                values
+                    .stream()
+                    .map(TestDataFactory::create)
+            )
+            .collect(Collectors.toList());
+    }
+
+    static List<Result<String>> createList(List<String> values, RuntimeException exception) {
+        return Stream
+            .concat(
+                values
+                    .stream()
+                    .map(TestDataFactory::create),
+                Stream
+                    .of(exception)
+                    .map(TestDataFactory::create)
+            )
+            .collect(Collectors.toList());
+    }
+
+    static List<Result<String>> createListOptional(List<String> values) {
+        return values
+            .stream()
+            .map(Optional::ofNullable)
+            .map(TestDataFactory::create)
+            .collect(Collectors.toList());
     }
 
     static Function<? super String, ? extends Result<? extends String>> flatMapAndThrow(RuntimeException exception) {
@@ -67,7 +115,7 @@ class TestDataFactory {
         return ex -> value;
     }
 
-    static Function<? super Exception, ? extends String> recoverAndThrow(RuntimeException exception) {
+    static Function<? super Exception, ? extends String> recover(RuntimeException exception) {
         return ex -> {
             throw exception;
         };

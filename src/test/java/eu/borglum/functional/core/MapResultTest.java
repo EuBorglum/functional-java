@@ -9,7 +9,6 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static eu.borglum.functional.core.TestDataFactory.create;
-import static eu.borglum.functional.core.TestDataFactory.createAndThrow;
 import static eu.borglum.functional.core.TestDataFactory.mapAndThrow;
 import static eu.borglum.functional.core.TestDataFactory.mapOptionalAndThrow;
 import static eu.borglum.functional.core.TestDataFactory.mapOptionalToNull;
@@ -38,7 +37,7 @@ class MapResultTest {
 
     private static Stream<Arguments> provideMap() {
         Result<String> empty = create();
-        Result<String> illegalState = createAndThrow(ILLEGAL_STATE_EXCEPTION);
+        Result<String> illegalState = create(ILLEGAL_STATE_EXCEPTION);
         Result<String> value = create("Value");
         Result<String> valueUpperCase = create("VALUE");
 
@@ -67,7 +66,7 @@ class MapResultTest {
     }
 
     private static Stream<Arguments> provideMapInvalid() {
-        Result<String> illegalState = createAndThrow(ILLEGAL_STATE_EXCEPTION);
+        Result<String> illegalState = create(ILLEGAL_STATE_EXCEPTION);
         Result<String> value = create("Value");
 
         return Stream.of(
@@ -91,7 +90,7 @@ class MapResultTest {
 
     private static Stream<Arguments> provideMapOptional() {
         Result<String> empty = create();
-        Result<String> illegalState = createAndThrow(ILLEGAL_STATE_EXCEPTION);
+        Result<String> illegalState = create(ILLEGAL_STATE_EXCEPTION);
         Result<String> value = create("Value");
         Result<String> valueUpperCase = create("VALUE");
 
@@ -123,7 +122,7 @@ class MapResultTest {
     }
 
     private static Stream<Arguments> provideMapOptionalInvalid() {
-        Result<String> illegalState = createAndThrow(ILLEGAL_STATE_EXCEPTION);
+        Result<String> illegalState = create(ILLEGAL_STATE_EXCEPTION);
         Result<String> value = create("Value");
 
         return Stream.of(

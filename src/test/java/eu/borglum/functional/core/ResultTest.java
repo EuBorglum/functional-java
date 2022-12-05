@@ -11,7 +11,6 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static eu.borglum.functional.core.TestDataFactory.create;
-import static eu.borglum.functional.core.TestDataFactory.createAndThrow;
 import static eu.borglum.functional.core.TestDataFactory.flatMapOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -95,7 +94,7 @@ class ResultTest {
 
     private static Stream<Arguments> provideOf() {
         Result<String> empty = create();
-        Result<String> illegalState = createAndThrow(ILLEGAL_STATE_EXCEPTION);
+        Result<String> illegalState = create(ILLEGAL_STATE_EXCEPTION);
         Result<String> optional = create(Optional.of("Value"));
         Result<String> value = create("Value");
 
@@ -103,7 +102,7 @@ class ResultTest {
             arguments(empty, empty),
             arguments(empty, create()),
             arguments(illegalState, illegalState),
-            arguments(illegalState, createAndThrow(ILLEGAL_STATE_EXCEPTION)),
+            arguments(illegalState, create(ILLEGAL_STATE_EXCEPTION)),
             arguments(optional, optional),
             arguments(optional, create(Optional.of("Value"))),
             arguments(value, value),

@@ -10,9 +10,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static eu.borglum.functional.core.TestDataFactory.create;
-import static eu.borglum.functional.core.TestDataFactory.createAndThrow;
 import static eu.borglum.functional.core.TestDataFactory.recover;
-import static eu.borglum.functional.core.TestDataFactory.recoverAndThrow;
 import static eu.borglum.functional.core.TestDataFactory.recoverToNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -38,13 +36,13 @@ class RecoverResultTest {
 
     private static Stream<Arguments> provideRecover() {
         Result<String> empty = create();
-        Result<String> illegalArgument = createAndThrow(ILLEGAL_ARGUMENT_EXCEPTION);
-        Result<String> illegalState = createAndThrow(ILLEGAL_STATE_EXCEPTION);
+        Result<String> illegalArgument = create(ILLEGAL_ARGUMENT_EXCEPTION);
+        Result<String> illegalState = create(ILLEGAL_STATE_EXCEPTION);
         Result<String> optional = create(Optional.of("Value"));
         Result<String> recovered = create("Recovered");
         Result<String> value = create("Value");
 
-        Function<? super Exception, ? extends String> failToRecover = recoverAndThrow(ILLEGAL_ARGUMENT_EXCEPTION);
+        Function<? super Exception, ? extends String> failToRecover = TestDataFactory.recover(ILLEGAL_ARGUMENT_EXCEPTION);
         Function<? super Exception, ? extends String> recover = recover("Recovered");
 
         return Stream.of(
@@ -71,10 +69,10 @@ class RecoverResultTest {
     }
 
     private static Stream<Arguments> provideRecoverInvalid() {
-        Result<String> illegalState = createAndThrow(ILLEGAL_STATE_EXCEPTION);
+        Result<String> illegalState = create(ILLEGAL_STATE_EXCEPTION);
         Result<String> value = create("Value");
 
-        Function<? super Exception, ? extends String> failToRecover = recoverAndThrow(ILLEGAL_ARGUMENT_EXCEPTION);
+        Function<? super Exception, ? extends String> failToRecover = TestDataFactory.recover(ILLEGAL_ARGUMENT_EXCEPTION);
         Function<? super Exception, ? extends String> recover = recover("Recovered");
 
         return Stream.of(

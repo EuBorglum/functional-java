@@ -42,18 +42,6 @@ public interface Result<T> {
     <U> Result<U> flatMap(Function<? super T, ? extends Result<? extends U>> function);
 
     /**
-     * @return
-     * @since 1.0
-     */
-    boolean isFailure();
-
-    /**
-     * @return
-     * @since 1.0
-     */
-    boolean isSuccess();
-
-    /**
      * If the {@link Result} is currently a {@code success} apply the {@link Function} and return
      * the outcome as a new {@link Result}.
      * <p>

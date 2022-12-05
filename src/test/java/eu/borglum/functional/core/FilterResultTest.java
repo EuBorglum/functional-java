@@ -8,7 +8,6 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static eu.borglum.functional.core.TestDataFactory.create;
-import static eu.borglum.functional.core.TestDataFactory.createAndThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
@@ -30,7 +29,7 @@ class FilterResultTest {
 
     private static Stream<Arguments> provideFilter() {
         Result<String> empty = create();
-        Result<String> illegalState = createAndThrow(ILLEGAL_STATE_EXCEPTION);
+        Result<String> illegalState = create(ILLEGAL_STATE_EXCEPTION);
         Result<String> value = create("Value");
 
         Predicate<? super String> acceptAll = str -> true;
@@ -56,7 +55,7 @@ class FilterResultTest {
 
     private static Stream<Arguments> provideFilterInvalid() {
         Result<String> value = create("Value");
-        Result<String> illegalState = createAndThrow(ILLEGAL_STATE_EXCEPTION);
+        Result<String> illegalState = create(ILLEGAL_STATE_EXCEPTION);
 
         return Stream.of(
             arguments(value, null),
