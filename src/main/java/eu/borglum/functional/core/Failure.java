@@ -37,6 +37,16 @@ public class Failure<T> implements Result<T> {
     }
 
     @Override
+    public boolean isFailure() {
+        return true;
+    }
+
+    @Override
+    public boolean isSuccess() {
+        return false;
+    }
+
+    @Override
     public <U> Result<U> map(Function<? super T, ? extends U> function) {
         Objects.requireNonNull(function);
 

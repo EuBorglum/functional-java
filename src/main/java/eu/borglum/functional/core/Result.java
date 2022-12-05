@@ -77,6 +77,18 @@ public interface Result<T> {
     <U> Result<U> map(OptionalFunction<? super T, ? extends U> function);
 
     /**
+     * @return
+     * @since 1.0
+     */
+    boolean isFailure();
+
+    /**
+     * @return
+     * @since 1.0
+     */
+    boolean isSuccess();
+
+    /**
      * Creates a {@link Result} by applying the {@link OptionalSupplier}
      *
      * @param supplier the {@link OptionalSupplier} to apply

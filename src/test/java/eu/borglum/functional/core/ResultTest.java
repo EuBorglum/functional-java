@@ -13,13 +13,40 @@ import java.util.stream.Stream;
 import static eu.borglum.functional.core.TestDataFactory.create;
 import static eu.borglum.functional.core.TestDataFactory.createAndThrow;
 import static eu.borglum.functional.core.TestDataFactory.flatMapOf;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class ResultTest {
 
     private static final IllegalStateException ILLEGAL_STATE_EXCEPTION = new IllegalStateException("");
+
+    @Test
+    void testIsFailure() {
+        //when
+        Result<String> result = createAndThrow(ILLEGAL_STATE_EXCEPTION);
+
+        //then
+        assertAll(
+            () -> assertTrue(result.isFailure()),
+            () -> assertFalse(result.isSuccess())
+        );
+    }
+
+    @Test
+    void testIsSuccess() {
+        //when
+        Result<String> result = create();
+
+        //then
+        assertAll(
+            () -> assertFalse(result.isFailure()),
+            () -> assertTrue(result.isSuccess())
+        );
+    }
 
     /**
      * If you have a monad and a chain of functions that operates on it, then it should not matter how you nest

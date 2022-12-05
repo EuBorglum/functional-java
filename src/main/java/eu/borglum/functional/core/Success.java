@@ -60,6 +60,16 @@ public class Success<T> implements Result<T> {
     }
 
     @Override
+    public boolean isFailure() {
+        return false;
+    }
+
+    @Override
+    public boolean isSuccess() {
+        return true;
+    }
+
+    @Override
     public <U> Result<U> map(Function<? super T, ? extends U> function) {
         Objects.requireNonNull(function);
 
