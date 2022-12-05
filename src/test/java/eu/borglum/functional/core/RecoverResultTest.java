@@ -44,7 +44,7 @@ class RecoverResultTest {
         Result<String> recovered = create("Recovered");
         Result<String> value = create("Value");
 
-        Function<? super Exception, ? extends String> failToRecover = TestDataFactory.recover(ILLEGAL_ARGUMENT_EXCEPTION);
+        Function<? super Exception, ? extends String> failToRecover = recover(ILLEGAL_ARGUMENT_EXCEPTION);
         Function<? super Exception, ? extends String> recover = recover("Recovered");
 
         return Stream.of(
@@ -74,7 +74,7 @@ class RecoverResultTest {
         Result<String> illegalState = create(ILLEGAL_STATE_EXCEPTION);
         Result<String> value = create("Value");
 
-        Function<? super Exception, ? extends String> failToRecover = TestDataFactory.recover(ILLEGAL_ARGUMENT_EXCEPTION);
+        Function<? super Exception, ? extends String> failToRecover = recover(ILLEGAL_ARGUMENT_EXCEPTION);
         Function<? super Exception, ? extends String> recover = recover("Recovered");
 
         return Stream.of(
