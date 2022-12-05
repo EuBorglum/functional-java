@@ -120,4 +120,14 @@ class TestDataFactory {
             throw exception;
         };
     }
+
+    static OptionalFunction<? super Exception, ? extends String> recoverOptional(String value) {
+        return ex -> Optional.ofNullable(value);
+    }
+
+    static OptionalFunction<? super Exception, ? extends String> recoverOptionalAndThrow(RuntimeException exception) {
+        return ex -> {
+            throw exception;
+        };
+    }
 }

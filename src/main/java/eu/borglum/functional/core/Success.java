@@ -2,6 +2,8 @@ package eu.borglum.functional.core;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -129,5 +131,20 @@ public class Success<T> implements InternalResult<T>, Result<T> {
         Objects.requireNonNull(function);
 
         return create(value);
+    }
+
+    @Override
+    public <X extends Exception> Result<T> recover(Class<X> exceptionClass, OptionalFunction<? super X, ? extends T> function) {
+        Objects.requireNonNull(exceptionClass);
+        Objects.requireNonNull(function);
+
+        return create(value);
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
+            .append("value", value)
+            .toString();
     }
 }

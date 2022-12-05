@@ -86,4 +86,41 @@ class RecoverResultTest {
             arguments(illegalState, IllegalStateException.class, recoverToNull())
         );
     }
+
+    @ParameterizedTest
+    @MethodSource("provideRecoverOptional")
+    void testRecover(Result<String> initial, Class<Exception> exceptionClass,
+                     OptionalFunction<? super Exception, ? extends String> recoverFunction, Result<String> expected) {
+
+        //when
+        Result<String> actual = initial.recover(exceptionClass, recoverFunction);
+
+        //then
+        assertEquals(expected, actual);
+    }
+
+    private static Stream<Arguments> provideRecoverOptional() {
+        Result<String> empty = create();
+        Result<String> illegalArgument = create(ILLEGAL_ARGUMENT_EXCEPTION);
+        Result<String> illegalState = create(ILLEGAL_STATE_EXCEPTION);
+        Result<String> optional = create(Optional.of("Value"));
+        Result<String> recovered = create("Recovered");
+        Result<String> value = create("Value");
+
+        OptionalFunction<? super Exception, ? extends String> recover = recoverOptional("Recovered");
+        OptionalFunction<? super Exception, ? extends String> failToRecover = recoverOptionalAndThrow(ILLEGAL_ARGUMENT_EXCEPTION);
+
+        return Stream.of(
+            arguments(value, IllegalStateException.class, recover, value),
+            arguments(value, IllegalStateException.class, recover, optional),
+            arguments(empty, IllegalStateException.class, recover, empty),
+            arguments(illegalState, IllegalStateException.class, recover, recovered),
+            arguments(illegalState, Exception.class, recover, recovered),
+            arguments(illegalState, FormatterClosedException.class, recover, illegalState),
+            arguments(illegalState, NullPointerException.class, recover, illegalState),
+            arguments(illegalState, IllegalStateException.class, failToRecover, illegalArgument),
+            arguments(illegalArgument, IllegalStateException.class, recover, illegalArgument),
+            arguments(illegalArgument, IllegalStateException.class, failToRecover, illegalArgument)
+        );
+    }
 }
