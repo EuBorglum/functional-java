@@ -3,6 +3,7 @@ package eu.borglum.functional.core;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Results {
 
@@ -29,6 +30,26 @@ public class Results {
                         .orElse(null)
                 )
                 .collect(Collectors.toList())
+        );
+    }
+
+    /**
+     * @param stream
+     * @param <T>
+     * @return
+     * @since 1.0
+     */
+    static <T> Result<Stream<T>> sequence(Stream<Result<T>> stream) {
+        Objects.requireNonNull(stream);
+
+        return Result.of(
+            () -> stream
+                .map(InternalResult::of)
+                .map(
+                    result -> result
+                        .getValue()
+                        .orElse(null)
+                )
         );
     }
 }

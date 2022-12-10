@@ -7,6 +7,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static eu.borglum.functional.core.TestDataFactory.create;
@@ -21,13 +22,24 @@ class ResultsTest {
 
     @ParameterizedTest
     @MethodSource("provideSequence")
-    void testSequence(List<Result<String>> initial, Result<?> expected) {
+    void testSequenceList(List<Result<String>> initial, Result<?> expected) {
 
         //when
         Result<List<String>> actual = Results.sequence(initial);
 
         //then
         assertEquals(expected, actual);
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideSequence")
+    void testSequenceStream(List<Result<String>> initial, Result<?> expected) {
+
+        //when
+        Result<Stream<String>> actual = Results.sequence(initial.stream());
+
+        //then
+        assertEquals(expected, actual.mapValue(stream -> stream.collect(Collectors.toList())));
     }
 
     private static Stream<Arguments> provideSequence() {
