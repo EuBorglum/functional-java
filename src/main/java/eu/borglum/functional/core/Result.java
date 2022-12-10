@@ -79,11 +79,12 @@ public interface Result<T> {
     /**
      * @param exceptionClass
      * @param function
+     * @param <X>
      * @return
      * @since 1.0
      */
-    Result<T> mapFailure(Class<? extends Exception> exceptionClass,
-                         Function<? super Exception, ? extends Exception> function);
+    <X extends Exception> Result<T> mapFailure(Class<X> exceptionClass,
+                                               Function<? super X, ? extends Exception> function);
 
     /**
      * @param function
@@ -170,35 +171,38 @@ public interface Result<T> {
     /**
      * @param exceptionClass
      * @param function
+     * @param <X>
      * @return
      * @since 1.0
      */
-    Result<T> recover(Class<? extends Exception> exceptionClass, Function<? super Exception, ? extends T> function);
+    <X extends Exception> Result<T> recover(Class<X> exceptionClass, Function<? super X, ? extends T> function);
 
     /**
      * @param exceptionClass
      * @param function
+     * @param <X>
      * @return
      * @since 1.0
      */
-    Result<T> recover(Class<? extends Exception> exceptionClass,
-                      OptionalFunction<? super Exception, ? extends T> function);
+    <X extends Exception> Result<T> recover(Class<X> exceptionClass, OptionalFunction<? super X, ? extends T> function);
 
     /**
      * @param exceptionClass
      * @param function
+     * @param <X>
      * @return
      * @since 1.0
      */
-    Result<T> recoverOptional(Class<? extends Exception> exceptionClass,
-                              OptionalFunction<? super Exception, ? extends T> function);
+    <X extends Exception> Result<T> recoverOptional(Class<X> exceptionClass,
+                                                    OptionalFunction<? super X, ? extends T> function);
 
     /**
      * @param exceptionClass
      * @param function
+     * @param <X>
      * @return
      * @since 1.0
      */
-    Result<T> recoverValue(Class<? extends Exception> exceptionClass,
-                           Function<? super Exception, ? extends T> function);
+    <X extends Exception> Result<T> recoverValue(Class<? extends X> exceptionClass,
+                                                 Function<? super X, ? extends T> function);
 }
