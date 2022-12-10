@@ -92,7 +92,9 @@ public class Success<T> implements InternalResult<T>, Result<T> {
     }
 
     @Override
-    public <X extends Exception> Result<T> mapFailure(Class<X> exceptionClass, Function<? super X, ? extends Exception> function) {
+    public Result<T> mapFailure(Class<? extends Exception> exceptionClass,
+                                Function<? super Exception, ? extends Exception> function) {
+
         validate(exceptionClass, function);
 
         return create(value);
@@ -143,27 +145,32 @@ public class Success<T> implements InternalResult<T>, Result<T> {
     }
 
     @Override
-    public <X extends Exception> Result<T> recover(Class<X> exceptionClass, Function<? super X, ? extends T> function) {
+    public Result<T> recover(Class<? extends Exception> exceptionClass,
+                             Function<? super Exception, ? extends T> function) {
+
         return recoverValue(exceptionClass, function);
     }
 
     @Override
-    public <X extends Exception> Result<T> recover(Class<X> exceptionClass,
-                                                   OptionalFunction<? super X, ? extends T> function) {
+    public Result<T> recover(Class<? extends Exception> exceptionClass,
+                             OptionalFunction<? super Exception, ? extends T> function) {
+
         return recoverOptional(exceptionClass, function);
     }
 
     @Override
-    public <X extends Exception> Result<T> recoverOptional(Class<X> exceptionClass,
-                                                           OptionalFunction<? super X, ? extends T> function) {
+    public Result<T> recoverOptional(Class<? extends Exception> exceptionClass,
+                                     OptionalFunction<? super Exception, ? extends T> function) {
+
         validate(exceptionClass, function);
 
         return create(value);
     }
 
     @Override
-    public <X extends Exception> Result<T> recoverValue(Class<X> exceptionClass,
-                                                        Function<? super X, ? extends T> function) {
+    public Result<T> recoverValue(Class<? extends Exception> exceptionClass,
+                                  Function<? super Exception, ? extends T> function) {
+
         validate(exceptionClass, function);
 
         return create(value);
