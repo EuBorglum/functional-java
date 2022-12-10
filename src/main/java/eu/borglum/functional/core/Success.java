@@ -92,6 +92,13 @@ public class Success<T> implements InternalResult<T>, Result<T> {
     }
 
     @Override
+    public <X extends Exception> Result<T> mapFailure(Class<X> exceptionClass, Function<? super X, ? extends Exception> function) {
+        validate(exceptionClass, function);
+
+        return create(value);
+    }
+
+    @Override
     public <U> Result<U> mapOptional(OptionalFunction<? super T, ? extends U> function) {
         Objects.requireNonNull(function);
 
@@ -149,7 +156,7 @@ public class Success<T> implements InternalResult<T>, Result<T> {
     @Override
     public <X extends Exception> Result<T> recoverOptional(Class<X> exceptionClass,
                                                            OptionalFunction<? super X, ? extends T> function) {
-        validateRecover(exceptionClass, function);
+        validate(exceptionClass, function);
 
         return create(value);
     }
@@ -157,7 +164,7 @@ public class Success<T> implements InternalResult<T>, Result<T> {
     @Override
     public <X extends Exception> Result<T> recoverValue(Class<X> exceptionClass,
                                                         Function<? super X, ? extends T> function) {
-        validateRecover(exceptionClass, function);
+        validate(exceptionClass, function);
 
         return create(value);
     }
@@ -169,7 +176,7 @@ public class Success<T> implements InternalResult<T>, Result<T> {
             .toString();
     }
 
-    private <X extends Exception> void validateRecover(Class<X> exceptionClass, Function<?, ?> function) {
+    private <X extends Exception> void validate(Class<X> exceptionClass, Function<?, ?> function) {
         Objects.requireNonNull(exceptionClass);
         Objects.requireNonNull(function);
     }

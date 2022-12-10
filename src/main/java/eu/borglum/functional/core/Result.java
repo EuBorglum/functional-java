@@ -77,6 +77,16 @@ public interface Result<T> {
     <U> Result<U> map(OptionalFunction<? super T, ? extends U> function);
 
     /**
+     * @param exceptionClass
+     * @param function
+     * @param <X>
+     * @return
+     * @since 1.0
+     */
+    <X extends Exception> Result<T> mapFailure(Class<X> exceptionClass,
+                                               Function<? super X, ? extends Exception> function);
+
+    /**
      * @param function
      * @param <U>
      * @return

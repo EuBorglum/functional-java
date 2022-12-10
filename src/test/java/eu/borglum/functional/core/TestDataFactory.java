@@ -131,6 +131,16 @@ class TestDataFactory {
         };
     }
 
+    static Function<? super Exception, ? extends Exception> mapFailure(RuntimeException exception) {
+        return ex -> exception;
+    }
+
+    static Function<? super Exception, ? extends Exception> mapFailureAndThrow(RuntimeException exception) {
+        return ex -> {
+            throw exception;
+        };
+    }
+
     static OptionalFunction<? super String, ? extends String> mapOptionalAndThrow(RuntimeException exception) {
         return str -> {
             throw exception;

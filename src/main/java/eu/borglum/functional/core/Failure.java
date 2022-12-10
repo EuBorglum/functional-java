@@ -69,6 +69,33 @@ public class Failure<T> implements InternalResult<T>, Result<T> {
     }
 
     @Override
+    public <X extends Exception> Result<T> mapFailure(Class<X> exceptionClass,
+                                                      Function<? super X, ? extends Exception> function) {
+
+        validate(exceptionClass, function);
+
+        Optional<? extends InternalResult<? extends Exception>> internalResult = Optional
+            .of(exception)
+            .filter(ex -> exceptionClass.isAssignableFrom(ex.getClass()))
+            .map(exceptionClass::cast)
+            .map(ex -> Result.of(() -> function.apply(ex)))
+            .map(InternalResult::of);
+
+        //noinspection unchecked
+        return (Result<T>) internalResult
+            .filter(InternalResult::isSuccess)
+            .flatMap(InternalResult::getValue)
+            .map(Exception.class::cast)
+            .or(
+                () -> internalResult
+                    .filter(InternalResult::isFailure)
+                    .map(InternalResult::getCause)
+            )
+            .map(Failure::create)
+            .orElseGet(() -> create(exception));
+    }
+
+    @Override
     public <U> Result<U> mapOptional(OptionalFunction<? super T, ? extends U> function) {
         Objects.requireNonNull(function);
 
@@ -120,7 +147,7 @@ public class Failure<T> implements InternalResult<T>, Result<T> {
     @Override
     public <X extends Exception> Result<T> recoverOptional(Class<X> exceptionClass,
                                                            OptionalFunction<? super X, ? extends T> function) {
-        validateRecover(exceptionClass, function);
+        validate(exceptionClass, function);
 
         //noinspection unchecked
         return (Result<T>) Optional
@@ -128,13 +155,13 @@ public class Failure<T> implements InternalResult<T>, Result<T> {
             .filter(ex -> exceptionClass.isAssignableFrom(ex.getClass()))
             .map(exceptionClass::cast)
             .map(ex -> Result.of(() -> function.apply(ex)))
-            .orElseGet(() -> Failure.create(exception));
+            .orElseGet(() -> create(exception));
     }
 
     @Override
     public <X extends Exception> Result<T> recoverValue(Class<X> exceptionClass,
                                                         Function<? super X, ? extends T> function) {
-        validateRecover(exceptionClass, function);
+        validate(exceptionClass, function);
 
         //noinspection unchecked
         return (Result<T>) Optional
@@ -142,7 +169,7 @@ public class Failure<T> implements InternalResult<T>, Result<T> {
             .filter(ex -> exceptionClass.isAssignableFrom(ex.getClass()))
             .map(exceptionClass::cast)
             .map(ex -> Result.of(() -> function.apply(ex)))
-            .orElseGet(() -> Failure.create(exception));
+            .orElseGet(() -> create(exception));
     }
 
     private <E extends Exception> Optional<T> throwException() throws E {
@@ -157,7 +184,7 @@ public class Failure<T> implements InternalResult<T>, Result<T> {
             .toString();
     }
 
-    private <X extends Exception> void validateRecover(Class<X> exceptionClass, Function<?, ?> function) {
+    private <X extends Exception> void validate(Class<X> exceptionClass, Function<?, ?> function) {
         Objects.requireNonNull(exceptionClass);
         Objects.requireNonNull(function);
     }
