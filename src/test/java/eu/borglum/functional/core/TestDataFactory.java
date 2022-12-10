@@ -1,7 +1,9 @@
 package eu.borglum.functional.core;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -30,45 +32,81 @@ class TestDataFactory {
         return Result.of(() -> values);
     }
 
-    static List<Result<String>> createList(List<String> values) {
+    static Result<Set<String>> create(Set<String> values) {
+        return Result.of(() -> values);
+    }
+
+    static List<Result<String>> createList(Collection<String> values) {
+        return createStream(values).collect(Collectors.toList());
+    }
+
+    static List<Result<String>> createList(RuntimeException exception, Collection<String> values) {
+        return Stream
+            .concat(
+                Stream
+                    .of(exception)
+                    .map(TestDataFactory::create),
+                createStream(values)
+            )
+            .collect(Collectors.toList());
+    }
+
+    static List<Result<String>> createList(Collection<String> values, RuntimeException exception) {
+        return Stream
+            .concat(
+                createStream(values),
+                Stream
+                    .of(exception)
+                    .map(TestDataFactory::create)
+            )
+            .collect(Collectors.toList());
+    }
+
+    static List<Result<String>> createListOptional(Collection<String> values) {
+        return createStreamOptional(values).collect(Collectors.toList());
+    }
+
+    static Set<Result<String>> createSet(Collection<String> values) {
+        return createStream(values).collect(Collectors.toSet());
+    }
+
+    static Set<Result<String>> createSet(RuntimeException exception, Collection<String> values) {
+        return Stream
+            .concat(
+                Stream
+                    .of(exception)
+                    .map(TestDataFactory::create),
+                createStream(values)
+            )
+            .collect(Collectors.toSet());
+    }
+
+    static Set<Result<String>> createSet(Collection<String> values, RuntimeException exception) {
+        return Stream
+            .concat(
+                createStream(values),
+                Stream
+                    .of(exception)
+                    .map(TestDataFactory::create)
+            )
+            .collect(Collectors.toSet());
+    }
+
+    static Set<Result<String>> createSetOptional(Collection<String> values) {
+        return createStreamOptional(values).collect(Collectors.toSet());
+    }
+
+    static Stream<Result<String>> createStream(Collection<String> values) {
         return values
             .stream()
-            .map(TestDataFactory::create)
-            .collect(Collectors.toList());
+            .map(TestDataFactory::create);
     }
 
-    static List<Result<String>> createList(RuntimeException exception, List<String> values) {
-        return Stream
-            .concat(
-                Stream
-                    .of(exception)
-                    .map(TestDataFactory::create),
-                values
-                    .stream()
-                    .map(TestDataFactory::create)
-            )
-            .collect(Collectors.toList());
-    }
-
-    static List<Result<String>> createList(List<String> values, RuntimeException exception) {
-        return Stream
-            .concat(
-                values
-                    .stream()
-                    .map(TestDataFactory::create),
-                Stream
-                    .of(exception)
-                    .map(TestDataFactory::create)
-            )
-            .collect(Collectors.toList());
-    }
-
-    static List<Result<String>> createListOptional(List<String> values) {
+    static Stream<Result<String>> createStreamOptional(Collection<String> values) {
         return values
             .stream()
             .map(Optional::ofNullable)
-            .map(TestDataFactory::create)
-            .collect(Collectors.toList());
+            .map(TestDataFactory::create);
     }
 
     static Function<? super String, ? extends Result<? extends String>> flatMapAndThrow(RuntimeException exception) {
