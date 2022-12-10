@@ -121,10 +121,10 @@ class ResultTest {
 
     private static Stream<Arguments> provideOfInvalid() {
         return Stream.of(
-            arguments((Supplier<Result<String>>) () -> Result.of((Supplier<String>) null)),
-            arguments((Supplier<Result<String>>) () -> Result.of((Supplier<String>) () -> null)),
-            arguments((Supplier<Result<String>>) () -> Result.of((OptionalSupplier<String>) null)),
-            arguments((Supplier<Result<String>>) () -> Result.of((OptionalSupplier<String>) () -> null))
+            arguments((Supplier<Result<String>>) () -> Result.ofOptional(null)),
+            arguments((Supplier<Result<String>>) () -> Result.ofOptional(() -> null)),
+            arguments((Supplier<Result<String>>) () -> Result.ofValue(null)),
+            arguments((Supplier<Result<String>>) () -> Result.ofValue(() -> null))
         );
     }
 }

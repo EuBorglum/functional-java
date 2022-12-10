@@ -60,13 +60,23 @@ public class Failure<T> implements InternalResult<T>, Result<T> {
 
     @Override
     public <U> Result<U> map(Function<? super T, ? extends U> function) {
+        return mapValue(function);
+    }
+
+    @Override
+    public <U> Result<U> map(OptionalFunction<? super T, ? extends U> function) {
+        return mapOptional(function);
+    }
+
+    @Override
+    public <U> Result<U> mapOptional(OptionalFunction<? super T, ? extends U> function) {
         Objects.requireNonNull(function);
 
         return create(exception);
     }
 
     @Override
-    public <U> Result<U> map(OptionalFunction<? super T, ? extends U> function) {
+    public <U> Result<U> mapValue(Function<? super T, ? extends U> function) {
         Objects.requireNonNull(function);
 
         return create(exception);
@@ -74,9 +84,13 @@ public class Failure<T> implements InternalResult<T>, Result<T> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) { return true; }
+        if (this == o) {
+            return true;
+        }
 
-        if (o == null || getClass() != o.getClass()) { return false; }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Failure<?> failure = (Failure<?>) o;
 
@@ -94,6 +108,18 @@ public class Failure<T> implements InternalResult<T>, Result<T> {
 
     @Override
     public <X extends Exception> Result<T> recover(Class<X> exceptionClass, Function<? super X, ? extends T> function) {
+        return recoverValue(exceptionClass, function);
+    }
+
+    @Override
+    public <X extends Exception> Result<T> recover(Class<X> exceptionClass,
+                                                   OptionalFunction<? super X, ? extends T> function) {
+        return recoverOptional(exceptionClass, function);
+    }
+
+    @Override
+    public <X extends Exception> Result<T> recoverOptional(Class<X> exceptionClass,
+                                                           OptionalFunction<? super X, ? extends T> function) {
         validateRecover(exceptionClass, function);
 
         //noinspection unchecked
@@ -106,7 +132,8 @@ public class Failure<T> implements InternalResult<T>, Result<T> {
     }
 
     @Override
-    public <X extends Exception> Result<T> recover(Class<X> exceptionClass, OptionalFunction<? super X, ? extends T> function) {
+    public <X extends Exception> Result<T> recoverValue(Class<X> exceptionClass,
+                                                        Function<? super X, ? extends T> function) {
         validateRecover(exceptionClass, function);
 
         //noinspection unchecked

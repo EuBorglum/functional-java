@@ -77,6 +77,22 @@ public interface Result<T> {
     <U> Result<U> map(OptionalFunction<? super T, ? extends U> function);
 
     /**
+     * @param function
+     * @param <U>
+     * @return
+     * @since 1.0
+     */
+    <U> Result<U> mapOptional(OptionalFunction<? super T, ? extends U> function);
+
+    /**
+     * @param function
+     * @param <U>
+     * @return
+     * @since 1.0
+     */
+    <U> Result<U> mapValue(Function<? super T, ? extends U> function);
+
+    /**
      * Creates a {@link Result} by applying the {@link OptionalSupplier}
      *
      * @param supplier the {@link OptionalSupplier} to apply
@@ -87,16 +103,7 @@ public interface Result<T> {
      * @since 1.0
      */
     static <U> Result<U> of(OptionalSupplier<U> supplier) {
-        Objects.requireNonNull(supplier);
-
-        Optional<U> value;
-        try {
-            value = supplier.get();
-        } catch (Exception e) {
-            return Failure.create(e);
-        }
-
-        return Success.create(value);
+        return ofOptional(supplier);
     }
 
     /**
@@ -110,6 +117,35 @@ public interface Result<T> {
      * @since 1.0
      */
     static <U> Result<U> of(Supplier<U> supplier) {
+        return ofValue(supplier);
+    }
+
+    /**
+     * @param supplier
+     * @param <U>
+     * @return
+     * @since 1.0
+     */
+    static <U> Result<U> ofOptional(OptionalSupplier<U> supplier) {
+        Objects.requireNonNull(supplier);
+
+        Optional<U> value;
+        try {
+            value = supplier.get();
+        } catch (Exception e) {
+            return Failure.create(e);
+        }
+
+        return Success.create(value);
+    }
+
+    /**
+     * @param supplier
+     * @param <U>
+     * @return
+     * @since 1.0
+     */
+    static <U> Result<U> ofValue(Supplier<U> supplier) {
         Objects.requireNonNull(supplier);
 
         U value;
@@ -139,4 +175,23 @@ public interface Result<T> {
      * @since 1.0
      */
     <X extends Exception> Result<T> recover(Class<X> exceptionClass, OptionalFunction<? super X, ? extends T> function);
+
+    /**
+     * @param exceptionClass
+     * @param function
+     * @param <X>
+     * @return
+     * @since 1.0
+     */
+    <X extends Exception> Result<T> recoverOptional(Class<X> exceptionClass,
+                                                    OptionalFunction<? super X, ? extends T> function);
+
+    /**
+     * @param exceptionClass
+     * @param function
+     * @param <X>
+     * @return
+     * @since 1.0
+     */
+    <X extends Exception> Result<T> recoverValue(Class<X> exceptionClass, Function<? super X, ? extends T> function);
 }
