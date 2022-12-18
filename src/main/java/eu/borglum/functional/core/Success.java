@@ -12,10 +12,10 @@ import java.util.function.Predicate;
 
 public class Success<T> implements InternalResult<T>, Result<T> {
 
-    private final Optional<T> value;
+    private final Optional<T> optionalValue;
 
-    private Success(Optional<T> value) {
-        this.value = value;
+    private Success(Optional<T> optionalValue) {
+        this.optionalValue = optionalValue;
     }
 
     static <U> Success<U> create() {
@@ -37,7 +37,7 @@ public class Success<T> implements InternalResult<T>, Result<T> {
         Objects.requireNonNull(predicate);
 
         return Result.of(
-            () -> value.filter(predicate)
+            () -> optionalValue.filter(predicate)
         );
     }
 
@@ -45,11 +45,11 @@ public class Success<T> implements InternalResult<T>, Result<T> {
     public <U> Result<U> flatMap(Function<? super T, ? extends Result<? extends U>> function) {
         Objects.requireNonNull(function);
 
-        if (value.isPresent()) {
+        if (optionalValue.isPresent()) {
             Result<U> newResult;
             try {
                 //noinspection unchecked
-                newResult = (Result<U>) function.apply(value.get());
+                newResult = (Result<U>) function.apply(optionalValue.get());
             } catch (Exception e) {
                 return Failure.create(e);
             }
@@ -77,8 +77,8 @@ public class Success<T> implements InternalResult<T>, Result<T> {
     }
 
     @Override
-    public Optional<T> getValue() {
-        return value;
+    public Optional<T> getOptional() {
+        return optionalValue;
     }
 
     @Override
@@ -96,7 +96,7 @@ public class Success<T> implements InternalResult<T>, Result<T> {
                                                       Function<? super X, ? extends Exception> function) {
         validate(exceptionClass, function);
 
-        return create(value);
+        return create(optionalValue);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class Success<T> implements InternalResult<T>, Result<T> {
         Objects.requireNonNull(function);
 
         //noinspection unchecked
-        return (Result<U>) value
+        return (Result<U>) optionalValue
             .map(v -> Result.of(
                 () -> function.apply(v)
             ))
@@ -116,7 +116,7 @@ public class Success<T> implements InternalResult<T>, Result<T> {
         Objects.requireNonNull(function);
 
         //noinspection unchecked
-        return (Result<U>) value
+        return (Result<U>) optionalValue
             .map(v -> Result.of(
                 () -> function.apply(v)
             ))
@@ -132,14 +132,14 @@ public class Success<T> implements InternalResult<T>, Result<T> {
         Success<?> success = (Success<?>) o;
 
         return new EqualsBuilder()
-            .append(value, success.value)
+            .append(optionalValue, success.optionalValue)
             .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-            .append(value)
+            .append(optionalValue)
             .toHashCode();
     }
 
@@ -160,7 +160,7 @@ public class Success<T> implements InternalResult<T>, Result<T> {
                                                            OptionalFunction<? super X, ? extends T> function) {
         validate(exceptionClass, function);
 
-        return create(value);
+        return create(optionalValue);
     }
 
     @Override
@@ -168,13 +168,13 @@ public class Success<T> implements InternalResult<T>, Result<T> {
                                                         Function<? super X, ? extends T> function) {
         validate(exceptionClass, function);
 
-        return create(value);
+        return create(optionalValue);
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
-            .append("value", value)
+            .append("optionalValue", optionalValue)
             .toString();
     }
 

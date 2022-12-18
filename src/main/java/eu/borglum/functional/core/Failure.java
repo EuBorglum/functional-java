@@ -54,7 +54,7 @@ public class Failure<T> implements InternalResult<T>, Result<T> {
     }
 
     @Override
-    public Optional<T> getValue() {
+    public Optional<T> getOptional() {
         return throwException();
     }
 
@@ -83,7 +83,7 @@ public class Failure<T> implements InternalResult<T>, Result<T> {
         //noinspection unchecked
         return (Result<T>) internalResult
             .filter(InternalResult::isSuccess)
-            .flatMap(InternalResult::getValue)
+            .flatMap(InternalResult::getOptional)
             .map(Exception.class::cast)
             .or(
                 () -> internalResult

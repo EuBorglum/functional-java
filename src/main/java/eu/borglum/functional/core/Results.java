@@ -50,7 +50,7 @@ public class Results {
                 .map(InternalResult::of)
                 .map(
                     result -> result
-                        .getValue()
+                        .getOptional()
                         .orElse(null)
                 )
         );

@@ -34,22 +34,22 @@ class InternalResultTest {
     }
 
     @Test
-    void testGetValueWhenFailure() {
+    void testGetOptionalWhenFailure() {
         //when
         InternalResult<String> result = InternalResult.of(create(ILLEGAL_STATE_EXCEPTION));
 
         //then
-        IllegalStateException actual = assertThrows(IllegalStateException.class, result::getValue);
+        IllegalStateException actual = assertThrows(IllegalStateException.class, result::getOptional);
         assertEquals(ILLEGAL_STATE_EXCEPTION, actual);
     }
 
     @Test
-    void testGetValueWhenSuccess() {
+    void testGetOptionalWhenSuccess() {
         //when
         InternalResult<String> result = InternalResult.of(create("value"));
 
         //then
-        assertEquals(Optional.of("value"), result.getValue());
+        assertEquals(Optional.of("value"), result.getOptional());
     }
 
     @Test

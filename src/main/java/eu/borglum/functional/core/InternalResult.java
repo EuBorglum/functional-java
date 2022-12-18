@@ -27,7 +27,7 @@ public interface InternalResult<T> {
      * @return
      * @since 1.0
      */
-    Optional<T> getValue();
+    Optional<T> getOptional();
 
     /**
      * @param result
