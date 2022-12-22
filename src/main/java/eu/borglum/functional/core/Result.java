@@ -169,6 +169,13 @@ public interface Result<T> {
     }
 
     /**
+     * @param supplier
+     * @return
+     * @since 1.0
+     */
+    T orElseGet(Supplier<Switch<Exception, T>> supplier);
+
+    /**
      * @param exceptionClass
      * @param function
      * @param <X>
@@ -203,6 +210,5 @@ public interface Result<T> {
      * @return
      * @since 1.0
      */
-    <X extends Exception> Result<T> recoverValue(Class<? extends X> exceptionClass,
-                                                 Function<? super X, ? extends T> function);
+    <X extends Exception> Result<T> recoverValue(Class<X> exceptionClass, Function<? super X, ? extends T> function);
 }

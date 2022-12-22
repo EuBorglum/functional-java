@@ -9,23 +9,45 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
-public class Failure<T> implements InternalResult<T>, Result<T> {
+public final class Failure<T> implements InternalResult<T>, Result<T> {
 
     private final Exception exception;
 
     private Failure(Exception exception) {
+
         this.exception = exception;
     }
 
     static <U> Failure<U> create(Exception exception) {
+
         Objects.requireNonNull(exception);
 
         return new Failure<>(exception);
     }
 
     @Override
+    public boolean equals(Object o) {
+
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Failure<?> failure = (Failure<?>) o;
+
+        return new EqualsBuilder()
+            .append(exception, failure.exception)
+            .isEquals();
+    }
+
+    @Override
     public Result<T> filter(Predicate<? super T> predicate) {
+
         Objects.requireNonNull(predicate);
 
         return create(exception);
@@ -33,6 +55,7 @@ public class Failure<T> implements InternalResult<T>, Result<T> {
 
     @Override
     public <U> Result<U> flatMap(Function<? super T, ? extends Result<? extends U>> function) {
+
         Objects.requireNonNull(function);
 
         return create(exception);
@@ -40,31 +63,45 @@ public class Failure<T> implements InternalResult<T>, Result<T> {
 
     @Override
     public boolean isFailure() {
+
         return true;
     }
 
     @Override
     public boolean isSuccess() {
+
         return false;
     }
 
     @Override
     public Exception getCause() {
+
         return exception;
     }
 
     @Override
     public Optional<T> getOptional() {
+
         return throwException();
     }
 
     @Override
+    public int hashCode() {
+
+        return new HashCodeBuilder(17, 37)
+            .append(exception)
+            .toHashCode();
+    }
+
+    @Override
     public <U> Result<U> map(Function<? super T, ? extends U> function) {
+
         return mapValue(function);
     }
 
     @Override
     public <U> Result<U> map(OptionalFunction<? super T, ? extends U> function) {
+
         return mapOptional(function);
     }
 
@@ -96,6 +133,7 @@ public class Failure<T> implements InternalResult<T>, Result<T> {
 
     @Override
     public <U> Result<U> mapOptional(OptionalFunction<? super T, ? extends U> function) {
+
         Objects.requireNonNull(function);
 
         return create(exception);
@@ -103,37 +141,25 @@ public class Failure<T> implements InternalResult<T>, Result<T> {
 
     @Override
     public <U> Result<U> mapValue(Function<? super T, ? extends U> function) {
+
         Objects.requireNonNull(function);
 
         return create(exception);
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+    public T orElseGet(Supplier<Switch<Exception, T>> supplier) {
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        Objects.requireNonNull(supplier);
 
-        Failure<?> failure = (Failure<?>) o;
-
-        return new EqualsBuilder()
-            .append(exception, failure.exception)
-            .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-            .append(exception)
-            .toHashCode();
+        return supplier
+            .get()
+            .evaluate(exception);
     }
 
     @Override
     public <X extends Exception> Result<T> recover(Class<X> exceptionClass, Function<? super X, ? extends T> function) {
+
         return recoverValue(exceptionClass, function);
     }
 
@@ -159,7 +185,7 @@ public class Failure<T> implements InternalResult<T>, Result<T> {
     }
 
     @Override
-    public <X extends Exception> Result<T> recoverValue(Class<? extends X> exceptionClass,
+    public <X extends Exception> Result<T> recoverValue(Class<X> exceptionClass,
                                                         Function<? super X, ? extends T> function) {
         validate(exceptionClass, function);
 
@@ -173,19 +199,23 @@ public class Failure<T> implements InternalResult<T>, Result<T> {
     }
 
     private <E extends Exception> Optional<T> throwException() throws E {
+
         //noinspection unchecked
         throw (E) exception;
     }
 
     @Override
     public String toString() {
+
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
             .append("exception", exception)
             .toString();
     }
 
     private <X extends Exception> void validate(Class<X> exceptionClass, Function<?, ?> function) {
+
         Objects.requireNonNull(exceptionClass);
+
         Objects.requireNonNull(function);
     }
 }
