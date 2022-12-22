@@ -68,20 +68,10 @@ public final class Success<T> implements InternalResult<T>, Result<T> {
 
         Objects.requireNonNull(function);
 
-        if (optionalValue.isPresent()) {
-            Result<U> newResult;
-            try {
-                //noinspection unchecked
-                newResult = (Result<U>) function.apply(optionalValue.get());
-            } catch (Exception e) {
-                return Failure.create(e);
-            }
-
-            return Objects.requireNonNull(newResult);
-
-        } else {
-            return Success.create();
-        }
+        //noinspection unchecked
+        return optionalValue
+            .map(value -> (Result<U>) Objects.requireNonNull(function.apply(value)))
+            .orElseGet(Success::create);
     }
 
     @Override

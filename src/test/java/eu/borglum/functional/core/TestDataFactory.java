@@ -109,12 +109,22 @@ class TestDataFactory {
             .map(TestDataFactory::create);
     }
 
-    static Function<? super String, ? extends Result<? extends String>> flatMapAndThrow(RuntimeException exception) {
+    static Function<? super String, ? extends Result<? extends String>> flatMapAndThrowInResult
+        (RuntimeException exception) {
+
         return str -> Result.of(
             () -> {
                 throw exception;
             }
         );
+    }
+
+    static Function<? super String, ? extends Result<? extends String>> flatMapAndThrowOutsideOfResult
+        (RuntimeException exception) {
+
+        return str -> {
+            throw exception;
+        };
     }
 
     static Function<? super String, ? extends Result<? extends String>> flatMapOf() {

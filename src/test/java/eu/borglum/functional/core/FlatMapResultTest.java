@@ -9,7 +9,8 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static eu.borglum.functional.core.TestDataFactory.create;
-import static eu.borglum.functional.core.TestDataFactory.flatMapAndThrow;
+import static eu.borglum.functional.core.TestDataFactory.flatMapAndThrowInResult;
+import static eu.borglum.functional.core.TestDataFactory.flatMapAndThrowOutsideOfResult;
 import static eu.borglum.functional.core.TestDataFactory.flatMapOf;
 import static eu.borglum.functional.core.TestDataFactory.flatMapToNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -47,23 +48,24 @@ class FlatMapResultTest {
         return Stream.of(
             arguments(empty, flatMapOf(), empty),
             arguments(empty, toUpperCase, empty),
-            arguments(illegalState, flatMapAndThrow(ILLEGAL_ARGUMENT_EXCEPTION), illegalState),
+            arguments(illegalState, flatMapAndThrowInResult(ILLEGAL_ARGUMENT_EXCEPTION), illegalState),
             arguments(illegalState, flatMapOf(), illegalState),
             arguments(illegalState, flatMapToNull(), illegalState),
             arguments(illegalState, toUpperCase, illegalState),
             arguments(value, flatMapOf(), value),
             arguments(value, toUpperCase, valueUpperCase),
-            arguments(value, flatMapAndThrow(ILLEGAL_STATE_EXCEPTION), illegalState)
+            arguments(value, flatMapAndThrowInResult(ILLEGAL_STATE_EXCEPTION), illegalState)
         );
     }
 
     @ParameterizedTest
     @MethodSource("provideFlatMapInvalid")
     void testFlatMapInvalid(Result<String> initial,
-                            Function<? super String, ? extends Result<? extends String>> invalid) {
+                            Function<? super String, ? extends Result<? extends String>> invalid,
+                            Class<? extends Exception> exceptionClass) {
 
         //then
-        assertThrows(NullPointerException.class, () -> initial.flatMap(invalid));
+        assertThrows(exceptionClass, () -> initial.flatMap(invalid));
     }
 
     private static Stream<Arguments> provideFlatMapInvalid() {
@@ -71,9 +73,10 @@ class FlatMapResultTest {
         Result<String> value = create("Value");
 
         return Stream.of(
-            arguments(illegalState, null),
-            arguments(value, null),
-            arguments(value, flatMapToNull())
+            arguments(illegalState, null, NullPointerException.class),
+            arguments(value, null, NullPointerException.class),
+            arguments(value, flatMapToNull(), NullPointerException.class),
+            arguments(value, flatMapAndThrowOutsideOfResult(ILLEGAL_STATE_EXCEPTION), IllegalStateException.class)
         );
     }
 }
