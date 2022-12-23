@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 import static eu.borglum.functional.core.TestDataFactory.create;
 import static eu.borglum.functional.core.TestDataFactory.recover;
 import static eu.borglum.functional.core.TestDataFactory.recoverOptional;
-import static eu.borglum.functional.core.TestDataFactory.recoverOptionalAndThrow;
+import static eu.borglum.functional.core.TestDataFactory.recoverOptionalToNull;
 import static eu.borglum.functional.core.TestDataFactory.recoverToNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -110,7 +110,7 @@ class RecoverResultTest {
         Result<String> value = create("Value");
 
         OptionalFunction<? super Exception, ? extends String> recover = recoverOptional("Recovered");
-        OptionalFunction<? super Exception, ? extends String> failToRecover = recoverOptionalAndThrow(ILLEGAL_ARGUMENT_EXCEPTION);
+        OptionalFunction<? super Exception, ? extends String> failToRecover = recoverOptional(ILLEGAL_ARGUMENT_EXCEPTION);
 
         return Stream.of(
             arguments(value, IllegalStateException.class, recover, value),
@@ -123,6 +123,34 @@ class RecoverResultTest {
             arguments(illegalState, IllegalStateException.class, failToRecover, illegalArgument),
             arguments(illegalArgument, IllegalStateException.class, recover, illegalArgument),
             arguments(illegalArgument, IllegalStateException.class, failToRecover, illegalArgument)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideRecoverOptionalInvalid")
+    void testRecoverInvalid(Result<String> initial, Class<Exception> exceptionClass,
+                            OptionalFunction<? super Exception, ? extends String> invalid) {
+
+        //then
+        assertThrows(NullPointerException.class, () -> initial.recover(exceptionClass, invalid));
+    }
+
+    private static Stream<Arguments> provideRecoverOptionalInvalid() {
+        Result<String> illegalState = create(ILLEGAL_STATE_EXCEPTION);
+        Result<String> value = create("Value");
+
+        OptionalFunction<? super Exception, ? extends String> failToRecover = recoverOptional(ILLEGAL_STATE_EXCEPTION);
+        OptionalFunction<? super Exception, ? extends String> recover = recoverOptional("Recovered");
+
+        return Stream.of(
+            arguments(value, null, recover),
+            arguments(value, null, failToRecover),
+            arguments(value, IllegalStateException.class, null),
+            arguments(illegalState, null, recover),
+            arguments(illegalState, null, failToRecover),
+            arguments(illegalState, null, recoverOptionalToNull()),
+            arguments(illegalState, IllegalStateException.class, null),
+            arguments(illegalState, IllegalStateException.class, recoverOptionalToNull())
         );
     }
 }
