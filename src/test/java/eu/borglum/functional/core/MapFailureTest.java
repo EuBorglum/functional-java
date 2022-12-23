@@ -30,8 +30,8 @@ class MapFailureTest {
 
         //when
         Result<String> actual = initial
-            .mapFailure(NumberFormatException.class, ex -> NUMBER_FORMAT_EXCEPTION)
-            .mapFailure(exceptionClass, function);
+            .map(NumberFormatException.class, ex -> NUMBER_FORMAT_EXCEPTION)
+            .map(exceptionClass, function);
 
         //then
         assertEquals(expected, actual);
@@ -64,7 +64,7 @@ class MapFailureTest {
                                Function<? super Exception, ? extends Exception> invalid) {
 
         //then
-        assertThrows(NullPointerException.class, () -> initial.mapFailure(exceptionClass, invalid));
+        assertThrows(NullPointerException.class, () -> initial.map(exceptionClass, invalid));
     }
 
     private static Stream<Arguments> provideMapFailureInvalid() {

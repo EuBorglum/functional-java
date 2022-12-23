@@ -11,7 +11,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public final class Success<T> implements InternalResult<T>, Result<T> {
+final class Success<T> implements InternalResult<T>, Result<T> {
 
     private final Optional<T> optionalValue;
 
@@ -119,8 +119,8 @@ public final class Success<T> implements InternalResult<T>, Result<T> {
     }
 
     @Override
-    public <X extends Exception> Result<T> mapFailure(Class<X> exceptionClass,
-                                                      Function<? super X, ? extends Exception> function) {
+    public <X extends Exception> Result<T> map(Class<X> exceptionClass,
+                                               Function<? super X, ? extends Exception> function) {
         validate(exceptionClass, function);
 
         return create(optionalValue);
