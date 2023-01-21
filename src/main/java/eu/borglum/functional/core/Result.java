@@ -213,7 +213,7 @@ public interface Result<T> {
      * @return
      * @since 1.0
      */
-    T orElseRecover(Supplier<Switch<Exception, T>> supplier);
+    T orElseRecover(SwitchSupplier<Exception, T> supplier);
 
     /**
      * @return

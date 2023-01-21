@@ -7,7 +7,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static eu.borglum.functional.core.TestDataFactory.create;
@@ -26,7 +25,7 @@ class OrElseRecoverTest {
 
     @ParameterizedTest
     @MethodSource("provideOrElseRecover")
-    void testOrElseRecover(Result<String> initial, Supplier<Switch<Exception, String>> switchSupplier,
+    void testOrElseRecover(Result<String> initial, SwitchSupplier<Exception, String> switchSupplier,
                            Result<String> expected) {
 
         //when
@@ -54,19 +53,19 @@ class OrElseRecoverTest {
             ex -> ex instanceof RuntimeException, ex -> "Runtime"
         );
 
-        Supplier<Switch<Exception, String>> switchIllegalArgumentSupplier = () -> Switch.of(
+        SwitchSupplier<Exception, String> switchIllegalArgumentSupplier = () -> Switch.of(
             Collections.singletonList(caseIllegalArgument)
         );
 
-        Supplier<Switch<Exception, String>> switchNoCasesSupplier = () -> Switch.of(
+        SwitchSupplier<Exception, String> switchNoCasesSupplier = () -> Switch.of(
             Collections.emptyList()
         );
 
-        Supplier<Switch<Exception, String>> switchRuntimeSupplier = () -> Switch.of(
+        SwitchSupplier<Exception, String> switchRuntimeSupplier = () -> Switch.of(
             Collections.singletonList(caseRuntime)
         );
 
-        Supplier<Switch<Exception, String>> switchSupplier = () -> Switch.of(
+        SwitchSupplier<Exception, String> switchSupplier = () -> Switch.of(
             Arrays.asList(caseIllegalArgument, caseIllegalState, caseRuntime)
         );
 
@@ -98,7 +97,7 @@ class OrElseRecoverTest {
 
     @ParameterizedTest
     @MethodSource("provideOrElseRecoverInvalid")
-    void testOrElseRecoverInvalid(Result<String> initial, Supplier<Switch<Exception, String>> invalid) {
+    void testOrElseRecoverInvalid(Result<String> initial, SwitchSupplier<Exception, String> invalid) {
 
         //then
         assertThrows(NullPointerException.class, () -> initial.orElseRecover(invalid));
