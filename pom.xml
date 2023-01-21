@@ -69,7 +69,7 @@
 
         <org.jacoco.version>0.8.8</org.jacoco.version>
 
-        <org.junit.jupiter.version>5.9.1</org.junit.jupiter.version>
+        <org.junit.jupiter.version>5.9.2</org.junit.jupiter.version>
 
         <org.sonatype.plugins.nexus-staging.version>1.6.13</org.sonatype.plugins.nexus-staging.version>
 
