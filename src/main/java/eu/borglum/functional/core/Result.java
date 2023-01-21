@@ -209,6 +209,12 @@ public interface Result<T> {
     }
 
     /**
+     * @return
+     * @since 1.0
+     */
+    T orElse();
+
+    /**
      * @param supplier
      * @return
      * @since 1.0
