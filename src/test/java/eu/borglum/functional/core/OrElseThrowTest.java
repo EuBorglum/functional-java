@@ -1,13 +1,16 @@
 package eu.borglum.functional.core;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static eu.borglum.functional.core.TestDataFactory.create;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class OrElseThrowTest {
@@ -30,5 +33,15 @@ class OrElseThrowTest {
             arguments(create("Value"), create("Value")),
             arguments(create(ILLEGAL_ARGUMENT_EXCEPTION), create(ILLEGAL_ARGUMENT_EXCEPTION))
         );
+    }
+
+    @Test
+    void testOrElseThrowNull() {
+
+        //when
+        Result<String> actual = Result.of(Optional::empty);
+
+        //then
+        assertNull(actual.orElseThrow());
     }
 }
