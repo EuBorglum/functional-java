@@ -82,7 +82,7 @@ final class Failure<T> implements InternalResult<T>, Result<T> {
     @Override
     public Optional<T> getOptional() {
 
-        return throwException();
+        return Optional.of(throwException());
     }
 
     @Override
@@ -154,7 +154,8 @@ final class Failure<T> implements InternalResult<T>, Result<T> {
 
         return supplier
             .get()
-            .evaluate(exception);
+            .evaluate(exception)
+            .orElseGet(this::throwException);
     }
 
     @Override
@@ -198,7 +199,7 @@ final class Failure<T> implements InternalResult<T>, Result<T> {
             .orElseGet(() -> create(exception));
     }
 
-    private <E extends Exception> Optional<T> throwException() throws E {
+    private <E extends Exception> T throwException() throws E {
 
         //noinspection unchecked
         throw (E) exception;

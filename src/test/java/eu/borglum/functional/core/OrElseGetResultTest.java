@@ -50,28 +50,30 @@ class OrElseGetResultTest {
             ex -> ex instanceof IllegalStateException, ex -> "IllegalState"
         );
 
-        Supplier<Switch<Exception, String>> switchIllegalArgumentSupplier = () -> Switch.of(
-            Collections.singletonList(caseIllegalArgument),
-            ex -> "Default"
+        Case<Exception, String> caseRuntime = Case.of(
+            ex -> ex instanceof RuntimeException, ex -> "Runtime"
         );
 
-        Supplier<Switch<Exception, String>> switchNoDefaultSupplier = () -> Switch.of(
+        Supplier<Switch<Exception, String>> switchIllegalArgumentSupplier = () -> Switch.of(
             Collections.singletonList(caseIllegalArgument)
         );
 
+        Supplier<Switch<Exception, String>> switchRuntimeSupplier = () -> Switch.of(
+            Collections.singletonList(caseRuntime)
+        );
+
         Supplier<Switch<Exception, String>> switchSupplier = () -> Switch.of(
-            Arrays.asList(caseIllegalArgument, caseIllegalState),
-            ex -> "Default"
+            Arrays.asList(caseIllegalArgument, caseIllegalState, caseRuntime)
         );
 
         return Stream.of(
             arguments(illegalArgument, switchIllegalArgumentSupplier, create("IllegalArgument")),
-            arguments(illegalState, switchIllegalArgumentSupplier, create("Default")),
-            arguments(illegalArgument, switchNoDefaultSupplier, create("IllegalArgument")),
-            arguments(value, switchSupplier, value),
+            arguments(runtime, switchIllegalArgumentSupplier, runtime),
+            arguments(illegalArgument, switchRuntimeSupplier, create("Runtime")),
             arguments(illegalArgument, switchSupplier, create("IllegalArgument")),
+            arguments(illegalState, switchIllegalArgumentSupplier, illegalState),
             arguments(illegalState, switchSupplier, create("IllegalState")),
-            arguments(runtime, switchSupplier, create("Default"))
+            arguments(value, switchSupplier, value)
         );
     }
 
@@ -82,12 +84,12 @@ class OrElseGetResultTest {
         Result<String> initial = create(RUNTIME_EXCEPTION);
 
         //then
-        NoDefaultCaseException actual = assertThrows(
-            NoDefaultCaseException.class, () -> initial.orElseGet(() -> Switch.of(Collections.emptyList()))
+        RuntimeException actual = assertThrows(
+            RuntimeException.class, () -> initial.orElseGet(() -> Switch.of(Collections.emptyList()))
         );
 
         //then
-        assertEquals("No default case has been specified", actual.getMessage());
+        assertEquals(RUNTIME_EXCEPTION, actual);
     }
 
     @Test
