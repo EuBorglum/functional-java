@@ -216,6 +216,12 @@ public interface Result<T> {
     T orElseGet(Supplier<Switch<Exception, T>> supplier);
 
     /**
+     * @return
+     * @since 1.0
+     */
+    T orElseThrow();
+
+    /**
      * If the {@link Result} is currently a {@code success} do not apply the {@link Function} and return a new
      * {@link Result} as a {@code success} containing the value of the current {@code success}.
      * <p>

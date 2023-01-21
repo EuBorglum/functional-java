@@ -161,6 +161,12 @@ final class Success<T> implements InternalResult<T>, Result<T> {
     }
 
     @Override
+    public T orElseThrow() {
+
+        return optionalValue.orElse(null);
+    }
+
+    @Override
     public <X extends Exception> Result<T> recover(Class<X> exceptionClass, Function<? super X, ? extends T> function) {
 
         return recoverValue(exceptionClass, function);

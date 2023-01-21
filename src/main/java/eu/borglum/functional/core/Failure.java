@@ -159,6 +159,12 @@ final class Failure<T> implements InternalResult<T>, Result<T> {
     }
 
     @Override
+    public T orElseThrow() {
+
+        return throwException();
+    }
+
+    @Override
     public <X extends Exception> Result<T> recover(Class<X> exceptionClass, Function<? super X, ? extends T> function) {
 
         return recoverValue(exceptionClass, function);
