@@ -4,6 +4,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -13,8 +15,10 @@ import static eu.borglum.functional.core.TestDataFactory.mapAndThrow;
 import static eu.borglum.functional.core.TestDataFactory.mapOptionalAndThrow;
 import static eu.borglum.functional.core.TestDataFactory.mapOptionalToNull;
 import static eu.borglum.functional.core.TestDataFactory.mapToNull;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class MapSuccessTest {
@@ -129,6 +133,83 @@ class MapSuccessTest {
             arguments(illegalState, null),
             arguments(value, null),
             arguments(value, mapOptionalToNull())
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideMapSwitch")
+    void testMapSwitch(Result<String> initial, SwitchSupplier<String, String> switchSupplier, Result<String> expected) {
+
+        //when
+        Result<String> actual = initial.map(switchSupplier);
+
+        //then
+        if (InternalResult.of(expected).isSuccess()) {
+            assertEquals(expected, actual);
+        } else {
+            assertAll(
+                () -> assertEquals(toCause(expected).getClass(), toCause(actual).getClass()),
+                () -> assertTrue(toCause(actual).getMessage().contains(toCause(expected).getMessage()))
+            );
+        }
+    }
+
+    private static Stream<Arguments> provideMapSwitch() {
+        Result<String> value = create("Value");
+
+        Case<String, String> caseValue = Case.of(
+            "Value"::equals, String::toUpperCase
+        );
+
+        Case<String, String> caseOtherValue = Case.of(
+            "OtherValue"::equals, String::toUpperCase
+        );
+
+        SwitchSupplier<String, String> switchOtherValueSupplier = () -> Switch.of(
+            Collections.singletonList(caseOtherValue)
+        );
+
+        SwitchSupplier<String, String> switchValueSupplier = () -> Switch.of(
+            Collections.singletonList(caseValue)
+        );
+
+        SwitchSupplier<String, String> switchSupplier = () -> Switch.of(
+            Arrays.asList(caseOtherValue, caseValue)
+        );
+
+        return Stream.of(
+            arguments(value, switchOtherValueSupplier, create(new CaseNotFoundException("Value"))),
+            arguments(value, switchValueSupplier, create("VALUE")),
+            arguments(value, switchSupplier, create("VALUE"))
+        );
+    }
+
+    private Exception toCause(Result<String> result) {
+        return InternalResult.of(result).getCause();
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideMapSwitchInvalid")
+    void testMapSwitchInvalid(Result<String> initial, SwitchSupplier<String, String> invalid) {
+
+        //when
+        assertThrows(NullPointerException.class, () -> initial.map(invalid));
+    }
+
+    private static Stream<Arguments> provideMapSwitchInvalid() {
+        Result<String> illegalState = create(ILLEGAL_STATE_EXCEPTION);
+        Result<String> value = create("Value");
+
+        SwitchSupplier<String, String> switchToNull = () -> Switch.of(
+            Collections.singletonList(
+                Case.of(str -> true, str -> null)
+            )
+        );
+
+        return Stream.of(
+            arguments(illegalState, null),
+            arguments(value, null),
+            arguments(value, switchToNull)
         );
     }
 }

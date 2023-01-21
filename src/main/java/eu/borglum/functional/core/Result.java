@@ -79,6 +79,14 @@ public interface Result<T> {
     <U> Result<U> map(OptionalFunction<? super T, ? extends U> function);
 
     /**
+     * @param supplier
+     * @param <U>
+     * @return
+     * @since 1.0
+     */
+    <U> Result<U> map(SwitchSupplier<? super T, ? extends U> supplier);
+
+    /**
      * If the {@link Result} is currently a {@code success} do not apply the {@link Function} and return a new
      * {@link Result} as a {@code success} containing the value of current {@code success}.
      * <p>

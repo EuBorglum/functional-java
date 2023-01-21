@@ -105,6 +105,14 @@ final class Failure<T> implements InternalResult<T>, Result<T> {
     }
 
     @Override
+    public <U> Result<U> map(SwitchSupplier<? super T, ? extends U> supplier) {
+
+        Objects.requireNonNull(supplier);
+
+        return create(exception);
+    }
+
+    @Override
     public <X extends Exception> Result<T> mapFailure(Class<X> exceptionClass,
                                                       Function<? super X, ? extends Exception> function) {
         validate(exceptionClass, function);
