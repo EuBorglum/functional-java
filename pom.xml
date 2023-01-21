@@ -54,7 +54,7 @@
         <org.apache.maven.plugins.dependency.version>3.5.0</org.apache.maven.plugins.dependency.version>
         <org.apache.maven.plugins.deploy.version>3.0.0</org.apache.maven.plugins.deploy.version>
         <org.apache.maven.plugins.enforcer.version>3.1.0</org.apache.maven.plugins.enforcer.version>
-        <org.apache.maven.plugins.failsafe.version>3.0.0-M7</org.apache.maven.plugins.failsafe.version>
+        <org.apache.maven.plugins.failsafe.version>3.0.0-M8</org.apache.maven.plugins.failsafe.version>
         <org.apache.maven.plugins.gpg.version>3.0.1</org.apache.maven.plugins.gpg.version>
         <org.apache.maven.plugins.help.version>3.3.0</org.apache.maven.plugins.help.version>
         <org.apache.maven.plugins.install.version>3.1.0</org.apache.maven.plugins.install.version>
