@@ -153,11 +153,6 @@ final class Success<T> implements InternalResult<T>, Result<T> {
     }
 
     @Override
-    public T orElse() {
-        return optionalValue.orElse(null);
-    }
-
-    @Override
     public T orElseRecover(Supplier<Switch<Exception, T>> supplier) {
 
         Objects.requireNonNull(supplier);
