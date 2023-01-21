@@ -58,6 +58,10 @@ class OrElseGetTest {
             Collections.singletonList(caseIllegalArgument)
         );
 
+        Supplier<Switch<Exception, String>> switchNoCasesSupplier = () -> Switch.of(
+            Collections.emptyList()
+        );
+
         Supplier<Switch<Exception, String>> switchRuntimeSupplier = () -> Switch.of(
             Collections.singletonList(caseRuntime)
         );
@@ -68,28 +72,15 @@ class OrElseGetTest {
 
         return Stream.of(
             arguments(illegalArgument, switchIllegalArgumentSupplier, create("IllegalArgument")),
+            arguments(illegalArgument, switchNoCasesSupplier, illegalArgument),
             arguments(runtime, switchIllegalArgumentSupplier, runtime),
             arguments(illegalArgument, switchRuntimeSupplier, create("Runtime")),
             arguments(illegalArgument, switchSupplier, create("IllegalArgument")),
             arguments(illegalState, switchIllegalArgumentSupplier, illegalState),
             arguments(illegalState, switchSupplier, create("IllegalState")),
+            arguments(value, switchNoCasesSupplier, value),
             arguments(value, switchSupplier, value)
         );
-    }
-
-    @Test
-    void testOrElseGetNoDefault() {
-
-        //when
-        Result<String> initial = create(RUNTIME_EXCEPTION);
-
-        //then
-        RuntimeException actual = assertThrows(
-            RuntimeException.class, () -> initial.orElseGet(() -> Switch.of(Collections.emptyList()))
-        );
-
-        //then
-        assertEquals(RUNTIME_EXCEPTION, actual);
     }
 
     @Test
