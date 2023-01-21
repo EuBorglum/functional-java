@@ -51,10 +51,10 @@
 
         <org.apache.maven.plugins.compiler.version>3.10.1</org.apache.maven.plugins.compiler.version>
         <org.apache.maven.plugins.clean.version>3.2.0</org.apache.maven.plugins.clean.version>
-        <org.apache.maven.plugins.dependency.version>3.4.0</org.apache.maven.plugins.dependency.version>
+        <org.apache.maven.plugins.dependency.version>3.5.0</org.apache.maven.plugins.dependency.version>
         <org.apache.maven.plugins.deploy.version>3.0.0</org.apache.maven.plugins.deploy.version>
         <org.apache.maven.plugins.enforcer.version>3.1.0</org.apache.maven.plugins.enforcer.version>
-        <org.apache.maven.plugins.failsafe.version>3.0.0-M7</org.apache.maven.plugins.failsafe.version>
+        <org.apache.maven.plugins.failsafe.version>3.0.0-M8</org.apache.maven.plugins.failsafe.version>
         <org.apache.maven.plugins.gpg.version>3.0.1</org.apache.maven.plugins.gpg.version>
         <org.apache.maven.plugins.help.version>3.3.0</org.apache.maven.plugins.help.version>
         <org.apache.maven.plugins.install.version>3.1.0</org.apache.maven.plugins.install.version>
@@ -62,14 +62,14 @@
         <org.apache.maven.plugins.release.version>3.0.0-M7</org.apache.maven.plugins.release.version>
         <org.apache.maven.plugins.resource.version>3.3.0</org.apache.maven.plugins.resource.version>
         <org.apache.maven.plugins.source.version>3.2.1</org.apache.maven.plugins.source.version>
-        <org.apache.maven.plugins.surefire.version>3.0.0-M7</org.apache.maven.plugins.surefire.version>
+        <org.apache.maven.plugins.surefire.version>3.0.0-M8</org.apache.maven.plugins.surefire.version>
 
         <org.codehaus.mojo.enforcer.version>1.6.1</org.codehaus.mojo.enforcer.version>
-        <org.codehaus.mojo.version>2.14.1</org.codehaus.mojo.version>
+        <org.codehaus.mojo.version>2.14.2</org.codehaus.mojo.version>
 
         <org.jacoco.version>0.8.8</org.jacoco.version>
 
-        <org.junit.jupiter.version>5.9.1</org.junit.jupiter.version>
+        <org.junit.jupiter.version>5.9.2</org.junit.jupiter.version>
 
         <org.sonatype.plugins.nexus-staging.version>1.6.13</org.sonatype.plugins.nexus-staging.version>
 
