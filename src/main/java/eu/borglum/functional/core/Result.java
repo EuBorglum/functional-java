@@ -254,8 +254,8 @@ public interface Result<T> {
      *
      * @param exceptionClass the {@link Class} predicate used to determine if the {@link OptionalFunction} should be
      *                       applied to the {@code failure} or not.
-     * @param function the {@link OptionalFunction} to apply.
-     * @param <X> the type of {@link Exception} that is mapped by the {@link OptionalFunction}.
+     * @param function       the {@link OptionalFunction} to apply.
+     * @param <X>            the type of {@link Exception} that is mapped by the {@link OptionalFunction}.
      * @return a new {@link Result} to which the {@link OptionalFunction} might have been applied.
      * @throws NullPointerException if the {@code exceptionClass} is {@code null},
      *                              if the {@link Function} is {@code null} or

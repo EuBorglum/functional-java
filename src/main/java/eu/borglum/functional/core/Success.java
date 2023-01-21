@@ -157,10 +157,7 @@ final class Success<T> implements InternalResult<T>, Result<T> {
 
         Objects.requireNonNull(supplier);
 
-        return InternalResult
-            .of(this)
-            .getOptional()
-            .orElse(null);
+        return optionalValue.orElse(null);
     }
 
     @Override
