@@ -154,7 +154,7 @@ final class Failure<T> implements InternalResult<T>, Result<T> {
     }
 
     @Override
-    public T orElseGet(Supplier<Switch<Exception, T>> supplier) {
+    public T orElseRecover(Supplier<Switch<Exception, T>> supplier) {
 
         Objects.requireNonNull(supplier);
 

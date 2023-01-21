@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
-class OrElseGetTest {
+class OrElseRecoverTest {
 
     private static final IllegalArgumentException ILLEGAL_ARGUMENT_EXCEPTION = new IllegalArgumentException("");
 
@@ -25,18 +25,18 @@ class OrElseGetTest {
     private static final RuntimeException RUNTIME_EXCEPTION = new RuntimeException("");
 
     @ParameterizedTest
-    @MethodSource("provideOrElseGet")
-    void testOrElseGet(Result<String> initial, Supplier<Switch<Exception, String>> switchSupplier,
-                       Result<String> expected) {
+    @MethodSource("provideOrElseRecover")
+    void testOrElseRecover(Result<String> initial, Supplier<Switch<Exception, String>> switchSupplier,
+                           Result<String> expected) {
 
         //when
-        Result<String> actual = Result.of(() -> initial.orElseGet(switchSupplier));
+        Result<String> actual = Result.of(() -> initial.orElseRecover(switchSupplier));
 
         //then
         assertEquals(expected, actual);
     }
 
-    private static Stream<Arguments> provideOrElseGet() {
+    private static Stream<Arguments> provideOrElseRecover() {
         Result<String> illegalArgument = create(ILLEGAL_ARGUMENT_EXCEPTION);
         Result<String> illegalState = create(ILLEGAL_STATE_EXCEPTION);
         Result<String> runtime = create(RUNTIME_EXCEPTION);
@@ -84,27 +84,27 @@ class OrElseGetTest {
     }
 
     @Test
-    void testOrElseGetNoValuePresent() {
+    void testOrElseRecoverNoValuePresent() {
 
         //given
         Result<String> initial = create();
 
         //when
-        String actual = initial.orElseGet(() -> Switch.of(Collections.emptyList()));
+        String actual = initial.orElseRecover(() -> Switch.of(Collections.emptyList()));
 
         //then
         assertNull(actual);
     }
 
     @ParameterizedTest
-    @MethodSource("provideOrElseGetInvalid")
-    void testOrElseGetInvalid(Result<String> initial, Supplier<Switch<Exception, String>> invalid) {
+    @MethodSource("provideOrElseRecoverInvalid")
+    void testOrElseRecoverInvalid(Result<String> initial, Supplier<Switch<Exception, String>> invalid) {
 
         //then
-        assertThrows(NullPointerException.class, () -> initial.orElseGet(invalid));
+        assertThrows(NullPointerException.class, () -> initial.orElseRecover(invalid));
     }
 
-    private static Stream<Arguments> provideOrElseGetInvalid() {
+    private static Stream<Arguments> provideOrElseRecoverInvalid() {
         Result<String> illegalState = create(ILLEGAL_STATE_EXCEPTION);
         Result<String> value = create("Value");
 
