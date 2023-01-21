@@ -101,8 +101,8 @@ public interface Result<T> {
      *                              is applied and it returns {@code null}.
      * @since 1.0
      */
-    <X extends Exception> Result<T> map(Class<X> exceptionClass,
-                                        Function<? super X, ? extends Exception> function);
+    <X extends Exception> Result<T> mapFailure(Class<X> exceptionClass,
+                                               Function<? super X, ? extends Exception> function);
 
     /**
      * A convenience method that does the same as {@link #map(OptionalFunction)}. It might be used to avoid casting
