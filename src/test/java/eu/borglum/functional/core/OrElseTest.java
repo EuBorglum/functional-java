@@ -36,7 +36,7 @@ class OrElseTest {
     }
 
     @Test
-    void testOrElseNull() {
+    void testOrElseNoValuePresent() {
 
         //when
         Result<String> actual = Result.of(Optional::empty);
