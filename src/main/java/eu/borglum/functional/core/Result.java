@@ -217,14 +217,28 @@ public interface Result<T> {
     }
 
     /**
-     * @param supplier
-     * @return
+     * If the {@link Result} is currently a {@code success} return the value. If the {@link Result} is currently
+     * a {@code failure} apply the {@link SwitchSupplier}.
+     * <p>
+     * If the {@link SwitchSupplier} is able to recover the {@code failure} then return the value recovered by
+     * the {@link SwitchSupplier}.
+     * <p>
+     * If the {@link SwitchSupplier} is not able to recover, i.e. none of the {@link Case}s of the
+     * {@link SwitchSupplier} matches the cause of the {@code failure} then throw the cause of the failure.
+     * <p>
+     * If the {@link SwitchSupplier} throws an exception while trying to recover then that exception is thrown.
+     *
+     * @param supplier the {@link SwitchSupplier} to apply.
+     * @return the value or throws an exception.
      * @since 1.0
      */
     T orElseRecover(SwitchSupplier<Exception, T> supplier);
 
     /**
-     * @return
+     * If the {@link Result} is currently a {@code success} return the value. If the {@link Result} is currently
+     * a {@code failure} throw the exception that is the cause of the {@code failure}
+     *
+     * @return the value or throws the cause of the failure
      * @since 1.0
      */
     T orElseThrow();
