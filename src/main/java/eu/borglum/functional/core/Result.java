@@ -79,6 +79,10 @@ public interface Result<T> {
     <U> Result<U> map(OptionalFunction<? super T, ? extends U> function);
 
     /**
+     * If the {@link Result} is currently a {@code success} apply the {@link SwitchSupplier} and return a new
+     * {@link Result} as either a {@code success} or a {@code failure} depending on the outcome of the
+     * {@link SwitchSupplier}
+     *
      * @param supplier
      * @param <U>
      * @return
