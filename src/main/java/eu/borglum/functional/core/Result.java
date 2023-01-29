@@ -33,11 +33,11 @@ public interface Result<T> {
      * This method is similar to {@link #map(Function)}, but the mapping function is one whose result is already
      * a {@link Result}, and if invoked, {@code flatMap} does not wrap it within an additional {@link Result}.
      *
-     * @param function the {@link Function} to apply
-     * @param <U>      the type of the value of the {@link Result} returned by the {@link Function}
-     * @return a new {@link Result} after the {@link Function} has been applied
+     * @param function the {@link Function} to apply.
+     * @param <U>      the type of the value of the {@link Result} returned by the {@link Function}.
+     * @return a new {@link Result} after the {@link Function} has been applied.
      * @throws NullPointerException if the {@link Function} is {@code null} or if the {@link Result} is
-     *                              currently a {@code success} and the {@link Function} returns {@code null}
+     *                              currently a {@code success} and the {@link Function} returns {@code null}.
      * @since 1.0
      */
     <U> Result<U> flatMap(Function<? super T, ? extends Result<? extends U>> function);
@@ -79,13 +79,20 @@ public interface Result<T> {
     <U> Result<U> map(OptionalFunction<? super T, ? extends U> function);
 
     /**
-     * If the {@link Result} is currently a {@code success} apply the {@link SwitchSupplier} and return a new
-     * {@link Result} as either a {@code success} or a {@code failure} depending on the outcome of the
-     * {@link SwitchSupplier}
+     * If the {@link Result} is currently a {@code success} apply the first {@link Case} of the {@link SwitchSupplier}
+     * that matches the value of the {@code success} and return a new {@link Result} as either a {@code success} or
+     * a {@code failure} depending on the outcome of the {@link Case} that has been applied.
+     * <p>
+     * If the {@link SwitchSupplier} does not contain any {@link Case} that can match the value of the {@code success}
+     * then a {@link CaseNotFoundException} is thrown.
+     * <p>
+     * If the {@link Result} is currently a {@code failure} do not apply the {@link SwitchSupplier} and return a new
+     * {@link Result} as a {@code failure} containing the {@link Exception} of the current {@code failure}.
      *
-     * @param supplier
-     * @param <U>
-     * @return
+     * @param supplier the {@link SwitchSupplier} to apply.
+     * @param <U>      the type of value returned by the {@link SwitchSupplier}.
+     * @return a new {@link Result} to which the {@link SwitchSupplier} might have been applied.
+     * @throws CaseNotFoundException if the {@link SwitchSupplier} is applied but cannot match the value.
      * @since 1.0
      */
     <U> Result<U> map(SwitchSupplier<? super T, ? extends U> supplier);
@@ -221,19 +228,20 @@ public interface Result<T> {
     }
 
     /**
-     * If the {@link Result} is currently a {@code success} return the value. If the {@link Result} is currently
-     * a {@code failure} apply the {@link SwitchSupplier}.
+     * If the {@link Result} is currently a {@code success} do not apply the {@link SwitchSupplier} and return the
+     * value.
      * <p>
-     * If the {@link SwitchSupplier} is able to recover the {@code failure} then return the value recovered by
-     * the {@link SwitchSupplier}.
+     * If the {@link Result} is currently a {@code failure} the apply the first {@link Case} of the
+     * {@link SwitchSupplier} that matches the cause of the {@code failure} and return the recovered value.
      * <p>
-     * If the {@link SwitchSupplier} is not able to recover, i.e. none of the {@link Case}s of the
-     * {@link SwitchSupplier} matches the cause of the {@code failure} then throw the cause of the failure.
+     * If the {@link SwitchSupplier} does not contain any {@link Case} that can match the cause of the {@code failure}
+     * then the cause of the {@code failure} is thrown.
      * <p>
      * If the {@link SwitchSupplier} throws an exception while trying to recover then that exception is thrown.
      *
      * @param supplier the {@link SwitchSupplier} to apply.
-     * @return the value or throws an exception.
+     * @return the value of the {@code success} or the recovered value of the {@code failure}.
+     * @throws NullPointerException if the {@link SwitchSupplier} is {@code null}.
      * @since 1.0
      */
     T orElseRecover(SwitchSupplier<Exception, T> supplier);
@@ -242,7 +250,7 @@ public interface Result<T> {
      * If the {@link Result} is currently a {@code success} return the value. If the {@link Result} is currently
      * a {@code failure} throw the exception that is the cause of the {@code failure}
      *
-     * @return the value or throws the cause of the failure
+     * @return the value of the {@code success}.
      * @since 1.0
      */
     T orElseThrow();

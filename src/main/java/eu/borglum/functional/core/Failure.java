@@ -161,7 +161,7 @@ final class Failure<T> implements InternalResult<T>, Result<T> {
 
         return supplier
             .get()
-            .evaluate(exception)
+            .evaluateAsOptional(exception)
             .orElseGet(this::throwException);
     }
 

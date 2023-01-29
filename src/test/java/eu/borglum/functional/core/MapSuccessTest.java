@@ -165,10 +165,6 @@ class MapSuccessTest {
             "OtherValue"::equals, String::toUpperCase
         );
 
-        SwitchSupplier<String, String> switchOtherValueSupplier = () -> Switch.of(
-            Collections.singletonList(caseOtherValue)
-        );
-
         SwitchSupplier<String, String> switchValueSupplier = () -> Switch.of(
             Collections.singletonList(caseValue)
         );
@@ -178,7 +174,6 @@ class MapSuccessTest {
         );
 
         return Stream.of(
-            arguments(value, switchOtherValueSupplier, create(new CaseNotFoundException("Value"))),
             arguments(value, switchValueSupplier, create("VALUE")),
             arguments(value, switchSupplier, create("VALUE"))
         );
@@ -190,15 +185,20 @@ class MapSuccessTest {
 
     @ParameterizedTest
     @MethodSource("provideMapSwitchInvalid")
-    void testMapSwitchInvalid(Result<String> initial, SwitchSupplier<String, String> invalid) {
+    void testMapSwitchInvalid(Result<String> initial, SwitchSupplier<String, String> invalid,
+                              Class<? extends Exception> exceptionClass) {
 
         //when
-        assertThrows(NullPointerException.class, () -> initial.map(invalid));
+        assertThrows(exceptionClass, () -> initial.map(invalid));
     }
 
     private static Stream<Arguments> provideMapSwitchInvalid() {
         Result<String> illegalState = create(ILLEGAL_STATE_EXCEPTION);
         Result<String> value = create("Value");
+
+        Case<String, String> caseOtherValue = Case.of(
+            "OtherValue"::equals, String::toUpperCase
+        );
 
         SwitchSupplier<String, String> switchToNull = () -> Switch.of(
             Collections.singletonList(
@@ -206,10 +206,15 @@ class MapSuccessTest {
             )
         );
 
+        SwitchSupplier<String, String> switchOtherValueSupplier = () -> Switch.of(
+            Collections.singletonList(caseOtherValue)
+        );
+
         return Stream.of(
-            arguments(illegalState, null),
-            arguments(value, null),
-            arguments(value, switchToNull)
+           arguments(illegalState, null, NullPointerException.class),
+            arguments(value, null, NullPointerException.class),
+            arguments(value, switchToNull, NullPointerException.class),
+            arguments(value, switchOtherValueSupplier, CaseNotFoundException.class)
         );
     }
 }

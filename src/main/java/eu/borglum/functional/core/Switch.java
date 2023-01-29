@@ -27,23 +27,21 @@ public final class Switch<T, R> {
         return new Switch<>(cases);
     }
 
-    Optional<R> evaluate(T value) {
+    Optional<R> evaluateAsOptional(T value) {
 
         return findCase(value)
             .map(c -> c.apply(value));
     }
 
-    R evaluateRequired(T value) {
-
+    Result<R> evaluateAsResult(T value) {
         return findCase(value)
+            .map(c -> Result.of(() -> c.apply(value)))
             .orElseThrow(() -> new CaseNotFoundException(
-                String.format("No case exists to match the value '%s'", value)
-            ))
-            .apply(value);
+                String.format("Unable to find case to apply to the value '%s'", value)
+            ));
     }
 
     private Optional<Case<T, R>> findCase(T value) {
-
         return cases
             .stream()
             .filter(c -> c.accept(value))
