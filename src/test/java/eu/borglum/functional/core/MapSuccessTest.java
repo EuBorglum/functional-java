@@ -4,8 +4,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -161,16 +159,13 @@ class MapSuccessTest {
             "Value"::equals, String::toUpperCase
         );
 
-        Case<String, String> caseOtherValue = Case.of(
-            "OtherValue"::equals, String::toUpperCase
-        );
-
         SwitchSupplier<String, String> switchValueSupplier = () -> Switch.of(
-            Collections.singletonList(caseValue)
+            caseValue
         );
 
         SwitchSupplier<String, String> switchSupplier = () -> Switch.of(
-            Arrays.asList(caseOtherValue, caseValue)
+            Case.of("OtherValue"::equals, String::toUpperCase),
+            caseValue
         );
 
         return Stream.of(
@@ -196,22 +191,16 @@ class MapSuccessTest {
         Result<String> illegalState = create(ILLEGAL_STATE_EXCEPTION);
         Result<String> value = create("Value");
 
-        Case<String, String> caseOtherValue = Case.of(
-            "OtherValue"::equals, String::toUpperCase
-        );
-
         SwitchSupplier<String, String> switchToNull = () -> Switch.of(
-            Collections.singletonList(
-                Case.of(str -> true, str -> null)
-            )
+            Case.of(str -> true, str -> null)
         );
 
         SwitchSupplier<String, String> switchOtherValueSupplier = () -> Switch.of(
-            Collections.singletonList(caseOtherValue)
+            Case.of("OtherValue"::equals, String::toUpperCase)
         );
 
         return Stream.of(
-           arguments(illegalState, null, NullPointerException.class),
+            arguments(illegalState, null, NullPointerException.class),
             arguments(value, null, NullPointerException.class),
             arguments(value, switchToNull, NullPointerException.class),
             arguments(value, switchOtherValueSupplier, CaseNotFoundException.class)

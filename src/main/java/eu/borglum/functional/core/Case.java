@@ -4,42 +4,46 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+/**
+ * @param <T>
+ * @param <R>
+ */
 public final class Case<T, R> {
 
-    private final Predicate<T> predicate;
+    private final Predicate<T> matcher;
 
-    private final Function<? super T, ? extends R> function;
+    private final Function<? super T, ? extends R> mapper;
 
-    private Case(Predicate<T> predicate, Function<? super T, ? extends R> function) {
+    private Case(Predicate<T> matcher, Function<? super T, ? extends R> mapper) {
 
-        this.predicate = predicate;
+        this.matcher = matcher;
 
-        this.function = function;
+        this.mapper = mapper;
     }
 
     /**
-     * @param predicate
-     * @param function
+     * @param matcher
+     * @param mapper
      * @param <U>
      * @param <V>
      * @return
      */
-    public static <U, V> Case<U, V> of(Predicate<U> predicate, Function<? super U, ? extends V> function) {
+    public static <U, V> Case<U, V> of(Predicate<U> matcher, Function<? super U, ? extends V> mapper) {
 
-        Objects.requireNonNull(predicate);
+        Objects.requireNonNull(matcher);
 
-        Objects.requireNonNull(function);
+        Objects.requireNonNull(mapper);
 
-        return new Case<>(predicate, function);
+        return new Case<>(matcher, mapper);
     }
 
     boolean accept(T value) {
 
-        return predicate.test(value);
+        return matcher.test(value);
     }
 
     R apply(T value) {
 
-        return function.apply(value);
+        return mapper.apply(value);
     }
 }

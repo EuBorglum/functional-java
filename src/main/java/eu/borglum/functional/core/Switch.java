@@ -1,9 +1,13 @@
 package eu.borglum.functional.core;
 
+import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * @param <T>
+ * @param <R>
+ */
 public final class Switch<T, R> {
 
     private final List<Case<T, R>> cases;
@@ -18,13 +22,11 @@ public final class Switch<T, R> {
      * @param <U>
      * @param <V>
      * @return
-     * @since 1.0
      */
-    public static <U, V> Switch<U, V> of(List<Case<U, V>> cases) {
+    @SafeVarargs
+    public static <U, V> Switch<U, V> of(Case<U, V>... cases) {
 
-        Objects.requireNonNull(cases);
-
-        return new Switch<>(cases);
+        return new Switch<>(Arrays.asList(cases));
     }
 
     Optional<R> evaluateAsOptional(T value) {
@@ -34,6 +36,7 @@ public final class Switch<T, R> {
     }
 
     Result<R> evaluateAsResult(T value) {
+
         return findCase(value)
             .map(c -> Result.of(() -> c.apply(value)))
             .orElseThrow(() -> new CaseNotFoundException(
@@ -42,6 +45,7 @@ public final class Switch<T, R> {
     }
 
     private Optional<Case<T, R>> findCase(T value) {
+
         return cases
             .stream()
             .filter(c -> c.accept(value))
