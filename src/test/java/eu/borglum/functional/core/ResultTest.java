@@ -33,10 +33,10 @@ class ResultTest {
         Result<String> value = create("Value");
 
         Function<? super String, ? extends Result<? extends String>> toLowerCase = str
-            -> Result.of((Supplier<String>) str::toLowerCase);
+            -> Result.ofValue(str::toLowerCase);
 
         Function<? super String, ? extends Result<? extends String>> toUpperCase = str
-            -> Result.of((Supplier<String>) str::toUpperCase);
+            -> Result.ofValue(str::toUpperCase);
 
         //then
         assertEquals(
@@ -59,7 +59,7 @@ class ResultTest {
         Result<String> value = create("Value");
 
         Function<? super String, ? extends Result<? extends String>> toUpperCase = str
-            -> Result.of((Supplier<String>) str::toUpperCase);
+            -> Result.ofValue(str::toUpperCase);
 
         //then
         assertEquals(value.flatMap(toUpperCase), toUpperCase.apply("Value"));

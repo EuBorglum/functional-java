@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 class TestDataFactory {
 
     static Result<String> create() {
-        return Result.of(Optional::empty);
+        return Result.ofOptional(Optional::empty);
     }
 
     static Result<String> create(String value) {

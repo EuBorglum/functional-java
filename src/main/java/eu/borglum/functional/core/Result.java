@@ -168,32 +168,33 @@ public interface Result<T> {
     }
 
     /**
-     * Apply the {@link Supplier} and create a {@link Result} as either a {@code success} or {@code failure} depending
-     * on the outcome of the {@link Supplier}.
+     * Apply the {@link ValueSupplier} and create a {@link Result} as either a {@code success} or {@code failure}
+     * depending on the outcome of the {@link ValueSupplier}.
      *
-     * @param supplier the {@link Supplier} to apply.
-     * @param <U>      the type of the value returned by the {@link Supplier}.
-     * @return the {@link Result} of applying the {@link Supplier}.
-     * @throws NullPointerException if the {@link Supplier} is {@code null} or if the {@link Supplier} returns
-     *                              {@code null}.
+     * @param supplier the {@link ValueSupplier} to apply.
+     * @param <U>      the type of the value returned by the {@link ValueSupplier}.
+     * @return the {@link Result} of applying the {@link ValueSupplier}.
+     * @throws NullPointerException if the {@link ValueSupplier} is {@code null} or if the {@link ValueSupplier}
+     *                              returns {@code null}.
      * @since 1.0
      */
-    static <U> Result<U> of(Supplier<U> supplier) {
+    static <U> Result<U> of(ValueSupplier<U> supplier) {
         return ofValue(supplier);
     }
 
     /**
-     * A convenience method that does the same as {@link #of(OptionalSupplier)}. It might be used to avoid casting
-     * the {@code supplier} to a {@link OptionalSupplier} if defined inline as a lambda expression.
+     * A convenience method that does the same as {@link #of(OptionalSupplier)}. It might be used if the
+     * {@code supplier} is passed as a reference of type {@link Supplier} or to avoid casting if the
+     * {@code supplier} is defined as a method reference.
      *
-     * @param supplier the {@link OptionalSupplier} to apply.
-     * @param <U>      the type of the value of the {@link Optional} returned by the {@link OptionalSupplier}.
-     * @return the {@link Result} of applying the {@link OptionalSupplier}.
-     * @throws NullPointerException if the {@link OptionalSupplier} is {@code null} or if the {@link OptionalSupplier}
+     * @param supplier the {@link Supplier} to apply.
+     * @param <U>      the type of the value of the {@link Optional} returned by the {@link Supplier}.
+     * @return the {@link Result} of applying the {@link Supplier}.
+     * @throws NullPointerException if the {@link Supplier} is {@code null} or if the {@link Supplier}
      *                              returns {@code null}.
      * @since 1.0
      */
-    static <U> Result<U> ofOptional(OptionalSupplier<U> supplier) {
+    static <U> Result<U> ofOptional(Supplier<Optional<U>> supplier) {
         Objects.requireNonNull(supplier);
 
         Optional<U> value;
@@ -207,8 +208,9 @@ public interface Result<T> {
     }
 
     /**
-     * A convenience method that does the same as {@link #of(Supplier)}. It might be used to avoid casting
-     * the {@code supplier} to a {@link Supplier} if defined as a lambda expression.
+     * A convenience method that does the same as {@link #of(ValueSupplier)}. It might be used if the {@code supplier}
+     * is passed as a reference of type {@link Supplier} or to avoid casting if the {@code supplier} is defined as a
+     * method reference.
      *
      * @param supplier the {@link Supplier} to apply.
      * @param <U>      the type of the value returned by the {@link Supplier}.

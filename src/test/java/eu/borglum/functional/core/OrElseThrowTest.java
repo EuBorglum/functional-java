@@ -39,7 +39,7 @@ class OrElseThrowTest {
     void testOrElseThrowNoValuePresent() {
 
         //when
-        Result<String> actual = Result.of(Optional::empty);
+        Result<String> actual = Result.ofOptional(Optional::empty);
 
         //then
         assertNull(actual.orElseThrow());

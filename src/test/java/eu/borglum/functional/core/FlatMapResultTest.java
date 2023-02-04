@@ -5,7 +5,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static eu.borglum.functional.core.TestDataFactory.create;
@@ -43,7 +42,7 @@ class FlatMapResultTest {
         Result<String> valueUpperCase = create("VALUE");
 
         Function<? super String, ? extends Result<? extends String>> toUpperCase = str ->
-            Result.of((Supplier<String>) str::toUpperCase);
+            Result.ofValue(str::toUpperCase);
 
         return Stream.of(
             arguments(empty, flatMapOf(), empty),
