@@ -155,16 +155,17 @@ final class Failure<T> implements InternalResult<T>, Result<T> {
     }
 
     @Override
-    public T orElseRecover(SwitchSupplier<Exception, T> supplier) {
+    public T orElseRecover(SwitchSupplier<? super Exception, ? extends T> supplier) {
 
         Objects.requireNonNull(supplier);
 
-        return supplier
+        Optional<? extends T> recoveredValue = supplier
             .get()
-            .evaluateAsOptional(exception)
-            .orElseGet(this::throwException);
-    }
+            .evaluateAsOptional(exception);
 
+        //noinspection unchecked
+        return ((Optional<T>) recoveredValue).orElseGet(this::throwException);
+    }
     @Override
     public T orElseThrow() {
 

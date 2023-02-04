@@ -252,7 +252,7 @@ public interface Result<T> {
      * @throws NullPointerException if the {@link SwitchSupplier} is {@code null}.
      * @since 1.0
      */
-    T orElseRecover(SwitchSupplier<Exception, T> supplier);
+    T orElseRecover(SwitchSupplier<? super Exception, ? extends T> supplier);
 
     /**
      * If the {@link Result} is currently a {@code success} return the value. If the {@link Result} is currently
