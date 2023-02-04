@@ -19,11 +19,11 @@ class TestDataFactory {
     }
 
     static Result<String> create(Optional<String> value) {
-        return Result.of(() -> value);
+        return Result.ofOptional(() -> value);
     }
 
     static Result<String> create(RuntimeException exception) {
-        return Result.of(() -> {
+        return Result.ofOptional(() -> {
             throw exception;
         });
     }
@@ -112,7 +112,7 @@ class TestDataFactory {
     static Function<? super String, ? extends Result<? extends String>> flatMapAndThrowInResult
         (RuntimeException exception) {
 
-        return str -> Result.of(
+        return str -> Result.ofOptional(
             () -> {
                 throw exception;
             }

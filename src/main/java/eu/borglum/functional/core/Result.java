@@ -166,7 +166,7 @@ public interface Result<T> {
      *                              returns {@code null}.
      * @since 1.0
      */
-    static <U> Result<U> of(OptionalSupplier<U> supplier) {
+    static <U> Result<U> of(OptionalSupplier<? extends U> supplier) {
         return ofOptional(supplier);
     }
 
@@ -181,14 +181,14 @@ public interface Result<T> {
      *                              returns {@code null}.
      * @since 1.0
      */
-    static <U> Result<U> of(ValueSupplier<U> supplier) {
+    static <U> Result<U> of(ValueSupplier<? extends U> supplier) {
         return ofValue(supplier);
     }
 
     /**
      * A convenience method that does the same as {@link #of(OptionalSupplier)}. It might be used if the
      * {@code supplier} is passed as a reference of type {@link Supplier} or to avoid casting if the
-     * {@code supplier} is defined as a method reference.
+     * {@code supplier} is defined as an inline lambda or method reference.
      *
      * @param supplier the {@link Supplier} to apply.
      * @param <U>      the type of the value of the {@link Optional} returned by the {@link Supplier}.
@@ -212,8 +212,8 @@ public interface Result<T> {
 
     /**
      * A convenience method that does the same as {@link #of(ValueSupplier)}. It might be used if the {@code supplier}
-     * is passed as a reference of type {@link Supplier} or to avoid casting if the {@code supplier} is defined as a
-     * method reference.
+     * is passed as a reference of type {@link Supplier} or to avoid casting if the {@code supplier} is defined as is
+     * defined as an inline lambda or method reference.
      *
      * @param supplier the {@link Supplier} to apply.
      * @param <U>      the type of the value returned by the {@link Supplier}.

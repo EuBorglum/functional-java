@@ -58,7 +58,7 @@ final class Success<T> implements InternalResult<T>, Result<T> {
 
         Objects.requireNonNull(predicate);
 
-        return Result.of(
+        return Result.ofOptional(
             () -> optionalValue.filter(predicate)
         );
     }
