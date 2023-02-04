@@ -309,20 +309,36 @@ public interface Result<T> {
     <X extends Exception> Result<T> recover(Class<X> exceptionClass, OptionalFunction<? super X, ? extends T> function);
 
     /**
-     * @param exceptionClass
-     * @param function
-     * @param <X>
-     * @return
+     * A convenience method that does the same as {@link #recover(Class, OptionalFunction)}. It might be used to avoid
+     * casting the {@code function} to an {@link OptionalFunction} if defined inline as a lambda expression.
+     *
+     * @param exceptionClass the {@link Class} predicate used to determine if the {@link OptionalFunction} should be
+     *                       applied to the {@code failure} or not.
+     * @param function       the {@link OptionalFunction} to apply.
+     * @param <X>            the type of {@link Exception} that is mapped by the {@link OptionalFunction}.
+     * @return a new {@link Result} to which the {@link OptionalFunction} might have been applied.
+     * @throws NullPointerException if the {@code exceptionClass} is {@code null},
+     *                              if the {@link Function} is {@code null} or
+     *                              if the {@link Result} is currently a {@code failure} and the {@link Function}
+     *                              is applied and it returns {@code null}.
      * @since 1.0
      */
     <X extends Exception> Result<T> recoverOptional(Class<X> exceptionClass,
                                                     OptionalFunction<? super X, ? extends T> function);
 
     /**
-     * @param exceptionClass
-     * @param function
-     * @param <X>
-     * @return
+     * A convenience method that does the same as {@link #recover(Class, Function)}. It might be use to avoid
+     * casting the {@code function} to a {@link Function} if defined inline as a lambda expression.
+     *
+     * @param exceptionClass the {@link Class} predicate used to determine if the {@link Function} should be applied
+     *                       to the {@code failure} or not.
+     * @param function       the {@link Function} to apply.
+     * @param <X>            the type of {@link Exception} that is mapped by the {@link Function}.
+     * @return a new {@link Result} to which the {@link Function} might have been applied.
+     * @throws NullPointerException if the {@code exceptionClass} is {@code null},
+     *                              if the {@link Function} is {@code null} or
+     *                              if the {@link Result} is currently a {@code failure} and the {@link Function}
+     *                              is applied and it returns {@code null}.
      * @since 1.0
      */
     <X extends Exception> Result<T> recoverValue(Class<X> exceptionClass, Function<? super X, ? extends T> function);
