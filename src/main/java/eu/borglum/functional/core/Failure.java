@@ -93,7 +93,7 @@ final class Failure<T> implements InternalResult<T>, Result<T> {
     }
 
     @Override
-    public <U> Result<U> map(Function<? super T, ? extends U> function) {
+    public <U> Result<U> map(ValueFunction<? super T, ? extends U> function) {
 
         return mapValue(function);
     }
@@ -139,7 +139,7 @@ final class Failure<T> implements InternalResult<T>, Result<T> {
     }
 
     @Override
-    public <U> Result<U> mapOptional(OptionalFunction<? super T, ? extends U> function) {
+    public <U> Result<U> mapOptional(Function<? super T, ? extends Optional<? extends U>> function) {
 
         Objects.requireNonNull(function);
 

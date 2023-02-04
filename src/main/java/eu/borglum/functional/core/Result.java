@@ -33,7 +33,7 @@ public interface Result<T> {
      * If the {@link Result} currently is a {@code failure} do not apply the {@link Function} and return
      * a new {@link Result} as a {@code failure} containing the {@link Exception} of the current {@code failure}.
      * <p>
-     * This method is similar to {@link #map(Function)}, but the mapping function is one whose result is already
+     * This method is similar to {@link #map(ValueFunction)}, but the mapping function is one whose result is already
      * a {@link Result}, and if invoked, {@code flatMap} does not wrap it within an additional {@link Result}.
      *
      * @param function the {@link Function} to apply.
@@ -46,20 +46,21 @@ public interface Result<T> {
     <U> Result<U> flatMap(Function<? super T, ? extends Result<? extends U>> function);
 
     /**
-     * If the {@link Result} is currently a {@code success} apply the {@link Function} and return a new {@link Result}
-     * as either a {@code success} or a {@code failure} depending on the outcome of the {@link Function}.
+     * If the {@link Result} is currently a {@code success} apply the {@link ValueFunction} and return a new
+     * {@link Result} as either a {@code success} or a {@code failure} depending on the outcome of the
+     * {@link ValueFunction}.
      * <p>
-     * If the {@link Result} currently is a {@code failure} do not apply the {@link Function} and return
+     * If the {@link Result} currently is a {@code failure} do not apply the {@link ValueFunction} and return
      * a new {@link Result} as a {@code failure} containing the {@link Exception} of the current {@code failure}.
      *
-     * @param function the {@link Function} to apply.
-     * @param <U>      the type of the value returned by the {@link Function}.
-     * @return a new {@link Result} to which the {@link Function} might have been applied.
-     * @throws NullPointerException if the {@link Function} is {@code null} or if the {@link Result} is
-     *                              currently a {@code success} and the {@link Function} returns {@code null}.
+     * @param function the {@link ValueFunction} to apply.
+     * @param <U>      the type of the value returned by the {@link ValueFunction}.
+     * @return a new {@link Result} to which the {@link ValueFunction} might have been applied.
+     * @throws NullPointerException if the {@link ValueFunction} is {@code null} or if the {@link Result} is
+     *                              currently a {@code success} and the {@link ValueFunction} returns {@code null}.
      * @since 1.0
      */
-    <U> Result<U> map(Function<? super T, ? extends U> function);
+    <U> Result<U> map(ValueFunction<? super T, ? extends U> function);
 
     /**
      * If the {@link Result} is currently a {@code success} apply the {@link OptionalFunction} and return
@@ -69,7 +70,7 @@ public interface Result<T> {
      * If the {@link Result} currently is a {@code failure} do not apply the {@link OptionalFunction} and return
      * a new {@link Result} as a {@code failure} containing the {@link Exception} of the current {@code failure}.
      * <p>
-     * This method is similar to {@link #map(Function)}, but the mapping function is one whose result is already
+     * This method is similar to {@link #map(ValueFunction)}, but the mapping function is one whose result is already
      * an {@link Optional}, and if invoked, {@code map} does not wrap it within an additional {@link Optional}.
      *
      * @param function the {@link OptionalFunction} to apply.
@@ -127,8 +128,9 @@ public interface Result<T> {
                                                Function<? super X, ? extends Exception> function);
 
     /**
-     * A convenience method that does the same as {@link #map(OptionalFunction)}. It might be used to avoid casting
-     * the {@code function} to an {@link OptionalFunction} if defined inline as a lambda expression.
+     * A convenience method that does the same as {@link #map(OptionalFunction)}. It might be used if the
+     * {@code function} is passed as a reference of type {@link Function} or to avoid casting if the {@code function}
+     * is defined as a method reference.
      *
      * @param function the {@link OptionalFunction} to apply.
      * @param <U>      the type of the value of the {@link Optional} returned by the {@link OptionalFunction}
@@ -137,11 +139,12 @@ public interface Result<T> {
      *                              currently a {@code success} and the {@link OptionalFunction} returns {@code null}.
      * @since 1.0
      */
-    <U> Result<U> mapOptional(OptionalFunction<? super T, ? extends U> function);
+    <U> Result<U> mapOptional(Function<? super T, ? extends Optional<? extends U>> function);
 
     /**
-     * A convenience method that does the same as {@link #map(Function)}. It might be used to avoid casting the
-     * {@code function} to a {@link Function} if defined inline as a lambda expression.
+     * A convenience method that does the same as {@link #map(ValueFunction)}. It might be used if the
+     * {@code function} is passed as a reference of type {@link Function} or to avoid casting if the {@code functon}
+     * is defined as a method reference.
      *
      * @param function the {@link Function} to apply
      * @param <U>      the type of the value returned by the {@link Function}
@@ -194,10 +197,10 @@ public interface Result<T> {
      *                              returns {@code null}.
      * @since 1.0
      */
-    static <U> Result<U> ofOptional(Supplier<Optional<U>> supplier) {
+    static <U> Result<U> ofOptional(Supplier<? extends Optional<? extends U>> supplier) {
         Objects.requireNonNull(supplier);
 
-        Optional<U> value;
+        Optional<? extends U> value;
         try {
             value = supplier.get();
         } catch (Exception e) {
@@ -219,7 +222,7 @@ public interface Result<T> {
      *                              {@code null}.
      * @since 1.0
      */
-    static <U> Result<U> ofValue(Supplier<U> supplier) {
+    static <U> Result<U> ofValue(Supplier<? extends U> supplier) {
         Objects.requireNonNull(supplier);
 
         U value;

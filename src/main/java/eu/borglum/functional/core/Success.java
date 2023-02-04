@@ -14,9 +14,10 @@ final class Success<T> implements InternalResult<T>, Result<T> {
 
     private final Optional<T> optionalValue;
 
-    private Success(Optional<T> optionalValue) {
+    private Success(Optional<? extends T> optionalValue) {
 
-        this.optionalValue = optionalValue;
+        //noinspection unchecked
+        this.optionalValue = (Optional<T>) optionalValue;
     }
 
     static <U> Success<U> create() {
@@ -31,7 +32,7 @@ final class Success<T> implements InternalResult<T>, Result<T> {
         return new Success<>(Optional.of(value));
     }
 
-    static <U> Success<U> create(Optional<U> value) {
+    static <U> Success<U> create(Optional<? extends U> value) {
 
         Objects.requireNonNull(value);
 
@@ -106,7 +107,7 @@ final class Success<T> implements InternalResult<T>, Result<T> {
     }
 
     @Override
-    public <U> Result<U> map(Function<? super T, ? extends U> function) {
+    public <U> Result<U> map(ValueFunction<? super T, ? extends U> function) {
 
         return mapValue(function);
     }
@@ -137,16 +138,18 @@ final class Success<T> implements InternalResult<T>, Result<T> {
     }
 
     @Override
-    public <U> Result<U> mapOptional(OptionalFunction<? super T, ? extends U> function) {
+    public <U> Result<U> mapOptional(Function<? super T, ? extends Optional<? extends U>> function) {
 
         Objects.requireNonNull(function);
 
-        //noinspection unchecked
-        return (Result<U>) optionalValue
-            .map(v -> Result.of(
+        Result<? extends U> result = optionalValue
+            .map(v -> Result.ofOptional(
                 () -> function.apply(v)
             ))
             .orElseGet(Success::create);
+
+        //noinspection unchecked
+        return (Result<U>) result;
     }
 
     @Override
@@ -154,12 +157,14 @@ final class Success<T> implements InternalResult<T>, Result<T> {
 
         Objects.requireNonNull(function);
 
-        //noinspection unchecked
-        return (Result<U>) optionalValue
-            .map(v -> Result.of(
+        Result<? extends U> result = optionalValue
+            .map(v -> Result.ofValue(
                 () -> function.apply(v)
             ))
             .orElseGet(Success::create);
+
+        //noinspection unchecked
+        return (Result<U>) result;
     }
 
     @Override

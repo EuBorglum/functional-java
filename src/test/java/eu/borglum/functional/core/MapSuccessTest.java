@@ -5,7 +5,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static eu.borglum.functional.core.TestDataFactory.create;
@@ -27,7 +26,7 @@ class MapSuccessTest {
 
     @ParameterizedTest
     @MethodSource("provideMap")
-    void testMap(Result<String> initial, Function<? super String, ? extends String> mapFunction,
+    void testMap(Result<String> initial, ValueFunction<? super String, ? extends String> mapFunction,
                  Result<String> expected) {
 
         //when
@@ -43,8 +42,8 @@ class MapSuccessTest {
         Result<String> value = create("Value");
         Result<String> valueUpperCase = create("VALUE");
 
-        Function<? super String, ? extends String> identity = str -> str;
-        Function<? super String, ? extends String> toUpperCase = String::toUpperCase;
+        ValueFunction<? super String, ? extends String> identity = str -> str;
+        ValueFunction<? super String, ? extends String> toUpperCase = String::toUpperCase;
 
         return Stream.of(
             arguments(empty, identity, empty),
@@ -61,7 +60,7 @@ class MapSuccessTest {
 
     @ParameterizedTest
     @MethodSource("provideMapInvalid")
-    void testMapInvalid(Result<String> initial, Function<? super String, ? extends String> invalid) {
+    void testMapInvalid(Result<String> initial, ValueFunction<? super String, ? extends String> invalid) {
 
         //then
         assertThrows(NullPointerException.class, () -> initial.map(invalid));

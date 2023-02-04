@@ -135,7 +135,7 @@ class TestDataFactory {
         return str -> null;
     }
 
-    static Function<? super String, ? extends String> mapAndThrow(RuntimeException exception) {
+    static ValueFunction<? super String, ? extends String> mapAndThrow(RuntimeException exception) {
         return str -> {
             throw exception;
         };
@@ -165,7 +165,7 @@ class TestDataFactory {
         return str -> null;
     }
 
-    static Function<? super String, ? extends String> mapToNull() {
+    static ValueFunction<? super String, ? extends String> mapToNull() {
         return str -> null;
     }
 
