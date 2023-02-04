@@ -182,7 +182,8 @@ final class Success<T> implements InternalResult<T>, Result<T> {
     }
 
     @Override
-    public <X extends Exception> Result<T> recover(Class<X> exceptionClass, Function<? super X, ? extends T> function) {
+    public <X extends Exception> Result<T> recover(Class<X> exceptionClass,
+                                                   ValueFunction<? super X, ? extends T> function) {
 
         return recoverValue(exceptionClass, function);
     }
@@ -196,7 +197,7 @@ final class Success<T> implements InternalResult<T>, Result<T> {
 
     @Override
     public <X extends Exception> Result<T> recoverOptional(Class<X> exceptionClass,
-                                                           OptionalFunction<? super X, ? extends T> function) {
+                                                           Function<? super X, ? extends Optional<? extends T>> function) {
         validate(exceptionClass, function);
 
         return create(optionalValue);

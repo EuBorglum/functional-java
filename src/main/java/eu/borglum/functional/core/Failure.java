@@ -172,7 +172,8 @@ final class Failure<T> implements InternalResult<T>, Result<T> {
     }
 
     @Override
-    public <X extends Exception> Result<T> recover(Class<X> exceptionClass, Function<? super X, ? extends T> function) {
+    public <X extends Exception> Result<T> recover(Class<X> exceptionClass,
+                                                   ValueFunction<? super X, ? extends T> function) {
 
         return recoverValue(exceptionClass, function);
     }
@@ -186,16 +187,18 @@ final class Failure<T> implements InternalResult<T>, Result<T> {
 
     @Override
     public <X extends Exception> Result<T> recoverOptional(Class<X> exceptionClass,
-                                                           OptionalFunction<? super X, ? extends T> function) {
+                                                           Function<? super X, ? extends Optional<? extends T>> function) {
         validate(exceptionClass, function);
 
-        //noinspection unchecked
-        return (Result<T>) Optional
+        Result<? extends T> result = Optional
             .of(exception)
             .filter(ex -> exceptionClass.isAssignableFrom(ex.getClass()))
             .map(exceptionClass::cast)
-            .map(ex -> Result.of(() -> function.apply(ex)))
+            .map(ex -> Result.ofOptional(() -> function.apply(ex)))
             .orElseGet(() -> create(exception));
+
+        //noinspection unchecked
+        return (Result<T>) result;
     }
 
     @Override
@@ -203,13 +206,15 @@ final class Failure<T> implements InternalResult<T>, Result<T> {
                                                         Function<? super X, ? extends T> function) {
         validate(exceptionClass, function);
 
-        //noinspection unchecked
-        return (Result<T>) Optional
+        Result<? extends T> result = Optional
             .of(exception)
             .filter(ex -> exceptionClass.isAssignableFrom(ex.getClass()))
             .map(exceptionClass::cast)
-            .map(ex -> Result.of(() -> function.apply(ex)))
+            .map(ex -> Result.ofValue(() -> function.apply(ex)))
             .orElseGet(() -> create(exception));
+
+        //noinspection unchecked
+        return (Result<T>) result;
     }
 
     private <E extends Exception> T throwException() throws E {

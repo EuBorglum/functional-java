@@ -169,15 +169,15 @@ class TestDataFactory {
         return str -> null;
     }
 
-    static Function<? super Exception, ? extends String> recoverToNull() {
+    static ValueFunction<? super Exception, ? extends String> recoverToNull() {
         return ex -> null;
     }
 
-    static Function<? super Exception, ? extends String> recover(String value) {
+    static ValueFunction<? super Exception, ? extends String> recover(String value) {
         return ex -> value;
     }
 
-    static Function<? super Exception, ? extends String> recover(RuntimeException exception) {
+    static ValueFunction<? super Exception, ? extends String> recover(RuntimeException exception) {
         return ex -> {
             throw exception;
         };
