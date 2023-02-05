@@ -8,11 +8,11 @@ import java.util.FormatterClosedException;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static eu.borglum.functional.core.TestDataFactory.create;
-import static eu.borglum.functional.core.TestDataFactory.recover;
-import static eu.borglum.functional.core.TestDataFactory.recoverOptional;
-import static eu.borglum.functional.core.TestDataFactory.recoverOptionalToNull;
-import static eu.borglum.functional.core.TestDataFactory.recoverToNull;
+import static eu.borglum.functional.TestDataFactory.create;
+import static eu.borglum.functional.TestDataFactory.recover;
+import static eu.borglum.functional.TestDataFactory.recoverOptional;
+import static eu.borglum.functional.TestDataFactory.recoverOptionalToNull;
+import static eu.borglum.functional.TestDataFactory.recoverToNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.Arguments.arguments;

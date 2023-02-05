@@ -1,5 +1,6 @@
 package eu.borglum.functional.core;
 
+import eu.borglum.functional.internal.InternalResult;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -7,11 +8,11 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static eu.borglum.functional.core.TestDataFactory.create;
-import static eu.borglum.functional.core.TestDataFactory.mapAndThrow;
-import static eu.borglum.functional.core.TestDataFactory.mapOptionalAndThrow;
-import static eu.borglum.functional.core.TestDataFactory.mapOptionalToNull;
-import static eu.borglum.functional.core.TestDataFactory.mapToNull;
+import static eu.borglum.functional.TestDataFactory.create;
+import static eu.borglum.functional.TestDataFactory.mapAndThrow;
+import static eu.borglum.functional.TestDataFactory.mapOptionalAndThrow;
+import static eu.borglum.functional.TestDataFactory.mapOptionalToNull;
+import static eu.borglum.functional.TestDataFactory.mapToNull;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;

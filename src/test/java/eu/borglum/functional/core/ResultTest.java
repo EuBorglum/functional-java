@@ -10,8 +10,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import static eu.borglum.functional.core.TestDataFactory.create;
-import static eu.borglum.functional.core.TestDataFactory.flatMapOf;
+import static eu.borglum.functional.TestDataFactory.create;
+import static eu.borglum.functional.TestDataFactory.flatMapOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.Arguments.arguments;

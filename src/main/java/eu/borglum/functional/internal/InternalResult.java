@@ -1,4 +1,6 @@
-package eu.borglum.functional.core;
+package eu.borglum.functional.internal;
+
+import eu.borglum.functional.core.Result;
 
 import java.util.Objects;
 import java.util.Optional;
