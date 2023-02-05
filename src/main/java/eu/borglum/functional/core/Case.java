@@ -39,6 +39,7 @@ public final class Case<T, R> {
      *                  {@link Function}.
      * @param <V>       the type of value to be returned by the {@link Function}.
      * @return the {@link Case} that has been created
+     * @throws NullPointerException if the {@link Predicate} or the {@link Function} are {@code null}.
      * @since 1.0
      */
     public static <U, V> Case<U, V> of(Predicate<? super U> predicate, Function<? super U, ? extends V> function) {

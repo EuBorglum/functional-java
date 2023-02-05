@@ -125,7 +125,7 @@ final class Success<T> implements InternalResult<T>, Result<T> {
 
         //noinspection unchecked
         return (Result<U>) optionalValue
-            .map(v -> supplier.get().evaluateAsResult(v))
+            .map(v -> supplier.get().evaluateStrictAsResult(v))
             .orElseGet(Success::create);
     }
 
