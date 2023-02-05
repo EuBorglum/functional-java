@@ -10,40 +10,44 @@ import java.util.function.Predicate;
  */
 public final class Case<T, R> {
 
-    private final Predicate<T> matcher;
+    private final Predicate<? super T> predicate;
 
-    private final Function<? super T, ? extends R> mapper;
+    private final Function<? super T, ? extends R> function;
 
-    private Case(Predicate<T> matcher, Function<? super T, ? extends R> mapper) {
+    private Case(Predicate<? super T> predicate, Function<? super T, ? extends R> function) {
 
-        this.matcher = matcher;
+        this.predicate = predicate;
 
-        this.mapper = mapper;
+        this.function = function;
     }
 
     /**
-     * @param matcher
-     * @param mapper
-     * @param <U>
-     * @param <V>
-     * @return
+     * Create a {@link Case} based on the specified {@link Predicate} and {@link Function}.
+     *
+     * @param predicate the {@link Predicate} to determine if the {@link Function} should be applied.
+     * @param function  the {@link Function} to apply if the {@link Predicate} evaluates to {@code true}.
+     * @param <U>       the type of value to be evaluated by the {@link Predicate} and applied to the
+     *                  {@link Function}.
+     * @param <V>       the type of value to be returned by the {@link Function}.
+     * @return the {@link Case} that has been created
+     * @since 1.0
      */
-    public static <U, V> Case<U, V> of(Predicate<U> matcher, Function<? super U, ? extends V> mapper) {
+    public static <U, V> Case<U, V> of(Predicate<? super U> predicate, Function<? super U, ? extends V> function) {
 
-        Objects.requireNonNull(matcher);
+        Objects.requireNonNull(predicate);
 
-        Objects.requireNonNull(mapper);
+        Objects.requireNonNull(function);
 
-        return new Case<>(matcher, mapper);
+        return new Case<>(predicate, function);
     }
 
     boolean accept(T value) {
 
-        return matcher.test(value);
+        return predicate.test(value);
     }
 
     R apply(T value) {
 
-        return mapper.apply(value);
+        return function.apply(value);
     }
 }
