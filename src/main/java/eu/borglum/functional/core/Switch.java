@@ -21,8 +21,8 @@ import java.util.Optional;
  * Once a value has been accepted by a {@link Case} the remaining {@link Case}s of the {@link Switch} will not be
  * invoked.
  *
- * @param <T> The type of value to be evaluated by the {@link Switch}
- * @param <R> The type of value to be returned by the {@link Switch}
+ * @param <T> the type of value to be evaluated by the {@link Switch}.
+ * @param <R> the type of value to be returned by the {@link Switch}.
  */
 public final class Switch<T, R> {
 

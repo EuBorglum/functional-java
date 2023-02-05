@@ -5,8 +5,15 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
- * @param <T>
- * @param <R>
+ * A {@link Case} consists of a {@link Predicate} and a {@link Function} and provides a functional approach similar
+ * to that of a {@code case} expression in a {@code switch} statement.
+ * <p>
+ * A value should first be passed to the {@link Predicate} for evaluation to determine if the value is accepted by the
+ * {@link Case}. If the evaluation results in the value being accepted by the {@link Case}, i.e. the {@link Predicate}
+ * evaluates to {@code true} then it is safe to apply the value to the {@link Function}.
+ *
+ * @param <T> the type of value to be evaluated and potentially processed by the {@link Case}.
+ * @param <R> the type of value to be returned by the {@link Case}.
  */
 public final class Case<T, R> {
 
@@ -24,8 +31,10 @@ public final class Case<T, R> {
     /**
      * Create a {@link Case} based on the specified {@link Predicate} and {@link Function}.
      *
-     * @param predicate the {@link Predicate} to determine if the {@link Function} should be applied.
-     * @param function  the {@link Function} to apply if the {@link Predicate} evaluates to {@code true}.
+     * @param predicate the {@link Predicate} to determine if a value is accepted when being evaluated by the
+     *                  {@link Case}.
+     * @param function  the {@link Function} to apply to a value that has been evaluated and accepted by the
+     *                  {@link Case}.
      * @param <U>       the type of value to be evaluated by the {@link Predicate} and applied to the
      *                  {@link Function}.
      * @param <V>       the type of value to be returned by the {@link Function}.
