@@ -7,6 +7,22 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
+ * Evaluating a {@link Supplier} will either return a value, i.e. be a {@code success}, or throw an {@link Exception},
+ * i.e. be a {@code failure}.
+ * <p>
+ * The can be generalized to the evaluation of any method or constructor that may either complete successfully or
+ * throw an {@link Exception}.
+ * <p>
+ * A {@link Result} is a monad that contains the result of such an
+ * <p>
+ * in any given time is either a {@link Success}
+ * <p>
+ * The can be generalized to the evaluation of any {@link Function} that will either return a value or may throw an
+ * {@link Exception}.
+ * <p>
+ * A {@link Result} is a monad that encapsulates the result of such evaluations and will either be in the state
+ * {@code success} or the state {@code failure} depending on the outcome of the evaluation.
+ *
  * @param <T>
  */
 public interface Result<T> {
