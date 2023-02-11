@@ -23,9 +23,9 @@ import java.util.function.Supplier;
  * {@link Result} will transition to the state {@code failure} and the {@link Result} will contain the
  * {@link Exception} that was thrown by the method.
  *
- * This implies that if a method is evaluated inside a {@link Result} it can be perceived that the method is returning
+ * In most cases if a method is evaluated inside a {@link Result} it can be perceived that the method is returning
  * either a value or an {@link Exception}. The {@link Exception} will not leak to the outside of the {@link Result}
- * and the execution flow of control will not be interrupted. Using a {@code try} and {@code catch} block to handle
+ * and the execution flow of control will not be interrupted. Using a {@code try catch} block to handle
  * an {@link Exception} is no longer necessary.
  *
  * @param <T>
