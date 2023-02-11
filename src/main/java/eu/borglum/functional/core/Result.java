@@ -10,18 +10,23 @@ import java.util.function.Supplier;
  * Evaluating a {@link Supplier} will either return a value, i.e. be a {@code success}, or throw an {@link Exception},
  * i.e. be a {@code failure}.
  * <p>
- * The can be generalized to the evaluation of any method or constructor that may either complete successfully or
- * throw an {@link Exception}.
- * <p>
- * A {@link Result} is a monad that contains the result of such an
- * <p>
- * in any given time is either a {@link Success}
- * <p>
- * The can be generalized to the evaluation of any {@link Function} that will either return a value or may throw an
- * {@link Exception}.
+ * This can be generalized to the evaluation of any method that may either return a value
+ * or throw an {@link Exception}.
  * <p>
  * A {@link Result} is a monad that encapsulates the result of such evaluations and will either be in the state
- * {@code success} or the state {@code failure} depending on the outcome of the evaluation.
+ * {@code success} or in the state {@code failure} depending on the outcome of the evaluation.
+ *
+ * If a method is evaluated inside a {@link Result} and it returns a value then the {@link Result} will transition
+ * to the state {@code success} and the {@link Result} will contain the value returned by the method.
+ *
+ * On the other hand if a method is evaluated inside a {@link Result} and it throws an {@link Exception} then the
+ * {@link Result} will transition to the state {@code failure} and the {@link Result} will contain the
+ * {@link Exception} that was thrown by the method.
+ *
+ * This implies that if a method is evaluated inside a {@link Result} it can be perceived that the method is returning
+ * either a value or an {@link Exception}. The {@link Exception} will not leak to the outside of the {@link Result}
+ * and the execution flow of control will not be interrupted. Using a {@code try} and {@code catch} block to handle
+ * an {@link Exception} is no longer necessary.
  *
  * @param <T>
  */
