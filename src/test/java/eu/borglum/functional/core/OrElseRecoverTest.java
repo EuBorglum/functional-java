@@ -5,11 +5,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.stream.Stream;
 
-import static eu.borglum.functional.core.TestDataFactory.create;
+import static eu.borglum.functional.TestDataFactory.create;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -54,19 +52,17 @@ class OrElseRecoverTest {
         );
 
         SwitchSupplier<Exception, String> switchIllegalArgumentSupplier = () -> Switch.of(
-            Collections.singletonList(caseIllegalArgument)
+            caseIllegalArgument
         );
 
-        SwitchSupplier<Exception, String> switchNoCasesSupplier = () -> Switch.of(
-            Collections.emptyList()
-        );
+        SwitchSupplier<Exception, String> switchNoCasesSupplier = Switch::of;
 
         SwitchSupplier<Exception, String> switchRuntimeSupplier = () -> Switch.of(
-            Collections.singletonList(caseRuntime)
+            caseRuntime
         );
 
         SwitchSupplier<Exception, String> switchSupplier = () -> Switch.of(
-            Arrays.asList(caseIllegalArgument, caseIllegalState, caseRuntime)
+            caseIllegalArgument, caseIllegalState, caseRuntime
         );
 
         return Stream.of(
@@ -89,7 +85,7 @@ class OrElseRecoverTest {
         Result<String> initial = create();
 
         //when
-        String actual = initial.orElseRecover(() -> Switch.of(Collections.emptyList()));
+        String actual = initial.orElseRecover(Switch::of);
 
         //then
         assertNull(actual);

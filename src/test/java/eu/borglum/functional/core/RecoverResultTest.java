@@ -6,14 +6,13 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.FormatterClosedException;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static eu.borglum.functional.core.TestDataFactory.create;
-import static eu.borglum.functional.core.TestDataFactory.recover;
-import static eu.borglum.functional.core.TestDataFactory.recoverOptional;
-import static eu.borglum.functional.core.TestDataFactory.recoverOptionalToNull;
-import static eu.borglum.functional.core.TestDataFactory.recoverToNull;
+import static eu.borglum.functional.TestDataFactory.create;
+import static eu.borglum.functional.TestDataFactory.recover;
+import static eu.borglum.functional.TestDataFactory.recoverOptional;
+import static eu.borglum.functional.TestDataFactory.recoverOptionalToNull;
+import static eu.borglum.functional.TestDataFactory.recoverToNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
@@ -27,7 +26,7 @@ class RecoverResultTest {
     @ParameterizedTest
     @MethodSource("provideRecover")
     void testRecover(Result<String> initial, Class<Exception> exceptionClass,
-                     Function<? super Exception, ? extends String> recoverFunction, Result<String> expected) {
+                     ValueFunction<? super Exception, ? extends String> recoverFunction, Result<String> expected) {
 
         //when
         Result<String> actual = initial.recover(exceptionClass, recoverFunction);
@@ -44,8 +43,8 @@ class RecoverResultTest {
         Result<String> recovered = create("Recovered");
         Result<String> value = create("Value");
 
-        Function<? super Exception, ? extends String> failToRecover = recover(ILLEGAL_ARGUMENT_EXCEPTION);
-        Function<? super Exception, ? extends String> recover = recover("Recovered");
+        ValueFunction<? super Exception, ? extends String> failToRecover = recover(ILLEGAL_ARGUMENT_EXCEPTION);
+        ValueFunction<? super Exception, ? extends String> recover = recover("Recovered");
 
         return Stream.of(
             arguments(value, IllegalStateException.class, recover, value),
@@ -64,7 +63,7 @@ class RecoverResultTest {
     @ParameterizedTest
     @MethodSource("provideRecoverInvalid")
     void testRecoverInvalid(Result<String> initial, Class<Exception> exceptionClass,
-                            Function<? super Exception, ? extends String> invalid) {
+                            ValueFunction<? super Exception, ? extends String> invalid) {
 
         //then
         assertThrows(NullPointerException.class, () -> initial.recover(exceptionClass, invalid));
@@ -74,8 +73,8 @@ class RecoverResultTest {
         Result<String> illegalState = create(ILLEGAL_STATE_EXCEPTION);
         Result<String> value = create("Value");
 
-        Function<? super Exception, ? extends String> failToRecover = recover(ILLEGAL_ARGUMENT_EXCEPTION);
-        Function<? super Exception, ? extends String> recover = recover("Recovered");
+        ValueFunction<? super Exception, ? extends String> failToRecover = recover(ILLEGAL_ARGUMENT_EXCEPTION);
+        ValueFunction<? super Exception, ? extends String> recover = recover("Recovered");
 
         return Stream.of(
             arguments(value, null, recover),

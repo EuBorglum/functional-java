@@ -10,8 +10,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import static eu.borglum.functional.core.TestDataFactory.create;
-import static eu.borglum.functional.core.TestDataFactory.flatMapOf;
+import static eu.borglum.functional.TestDataFactory.create;
+import static eu.borglum.functional.TestDataFactory.flatMapOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
@@ -33,10 +33,10 @@ class ResultTest {
         Result<String> value = create("Value");
 
         Function<? super String, ? extends Result<? extends String>> toLowerCase = str
-            -> Result.of((Supplier<String>) str::toLowerCase);
+            -> Result.ofValue(str::toLowerCase);
 
         Function<? super String, ? extends Result<? extends String>> toUpperCase = str
-            -> Result.of((Supplier<String>) str::toUpperCase);
+            -> Result.ofValue(str::toUpperCase);
 
         //then
         assertEquals(
@@ -59,7 +59,7 @@ class ResultTest {
         Result<String> value = create("Value");
 
         Function<? super String, ? extends Result<? extends String>> toUpperCase = str
-            -> Result.of((Supplier<String>) str::toUpperCase);
+            -> Result.ofValue(str::toUpperCase);
 
         //then
         assertEquals(value.flatMap(toUpperCase), toUpperCase.apply("Value"));

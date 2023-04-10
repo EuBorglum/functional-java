@@ -5,14 +5,13 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import static eu.borglum.functional.core.TestDataFactory.create;
-import static eu.borglum.functional.core.TestDataFactory.flatMapAndThrowInResult;
-import static eu.borglum.functional.core.TestDataFactory.flatMapAndThrowOutsideOfResult;
-import static eu.borglum.functional.core.TestDataFactory.flatMapOf;
-import static eu.borglum.functional.core.TestDataFactory.flatMapToNull;
+import static eu.borglum.functional.TestDataFactory.create;
+import static eu.borglum.functional.TestDataFactory.flatMapAndThrowInResult;
+import static eu.borglum.functional.TestDataFactory.flatMapAndThrowOutsideOfResult;
+import static eu.borglum.functional.TestDataFactory.flatMapOf;
+import static eu.borglum.functional.TestDataFactory.flatMapToNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
@@ -43,7 +42,7 @@ class FlatMapResultTest {
         Result<String> valueUpperCase = create("VALUE");
 
         Function<? super String, ? extends Result<? extends String>> toUpperCase = str ->
-            Result.of((Supplier<String>) str::toUpperCase);
+            Result.ofValue(str::toUpperCase);
 
         return Stream.of(
             arguments(empty, flatMapOf(), empty),

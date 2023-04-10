@@ -7,10 +7,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static eu.borglum.functional.core.TestDataFactory.create;
-import static eu.borglum.functional.core.TestDataFactory.mapFailure;
-import static eu.borglum.functional.core.TestDataFactory.mapFailureAndThrow;
-import static eu.borglum.functional.core.TestDataFactory.mapFailureToNull;
+import static eu.borglum.functional.TestDataFactory.create;
+import static eu.borglum.functional.TestDataFactory.mapFailure;
+import static eu.borglum.functional.TestDataFactory.mapFailureAndThrow;
+import static eu.borglum.functional.TestDataFactory.mapFailureToNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.Arguments.arguments;

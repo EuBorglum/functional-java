@@ -14,11 +14,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static eu.borglum.functional.core.TestDataFactory.create;
-import static eu.borglum.functional.core.TestDataFactory.createList;
-import static eu.borglum.functional.core.TestDataFactory.createListOptional;
-import static eu.borglum.functional.core.TestDataFactory.createSet;
-import static eu.borglum.functional.core.TestDataFactory.createSetOptional;
+import static eu.borglum.functional.TestDataFactory.create;
+import static eu.borglum.functional.TestDataFactory.createList;
+import static eu.borglum.functional.TestDataFactory.createListOptional;
+import static eu.borglum.functional.TestDataFactory.createSet;
+import static eu.borglum.functional.TestDataFactory.createSetOptional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 

@@ -1,10 +1,10 @@
-package eu.borglum.functional.core;
+package eu.borglum.functional.internal;
 
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
-import static eu.borglum.functional.core.TestDataFactory.create;
+import static eu.borglum.functional.TestDataFactory.create;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

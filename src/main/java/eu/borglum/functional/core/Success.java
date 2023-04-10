@@ -1,5 +1,6 @@
 package eu.borglum.functional.core;
 
+import eu.borglum.functional.internal.InternalResult;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -14,9 +15,10 @@ final class Success<T> implements InternalResult<T>, Result<T> {
 
     private final Optional<T> optionalValue;
 
-    private Success(Optional<T> optionalValue) {
+    private Success(Optional<? extends T> optionalValue) {
 
-        this.optionalValue = optionalValue;
+        //noinspection unchecked
+        this.optionalValue = (Optional<T>) optionalValue;
     }
 
     static <U> Success<U> create() {
@@ -31,7 +33,7 @@ final class Success<T> implements InternalResult<T>, Result<T> {
         return new Success<>(Optional.of(value));
     }
 
-    static <U> Success<U> create(Optional<U> value) {
+    static <U> Success<U> create(Optional<? extends U> value) {
 
         Objects.requireNonNull(value);
 
@@ -57,7 +59,7 @@ final class Success<T> implements InternalResult<T>, Result<T> {
 
         Objects.requireNonNull(predicate);
 
-        return Result.of(
+        return Result.ofOptional(
             () -> optionalValue.filter(predicate)
         );
     }
@@ -106,7 +108,7 @@ final class Success<T> implements InternalResult<T>, Result<T> {
     }
 
     @Override
-    public <U> Result<U> map(Function<? super T, ? extends U> function) {
+    public <U> Result<U> map(ValueFunction<? super T, ? extends U> function) {
 
         return mapValue(function);
     }
@@ -124,31 +126,31 @@ final class Success<T> implements InternalResult<T>, Result<T> {
 
         //noinspection unchecked
         return (Result<U>) optionalValue
-            .map(v -> Result.of(
-                () -> supplier.get().evaluateRequired(v)
-            ))
+            .map(v -> supplier.get().evaluateStrictAsResult(v))
             .orElseGet(Success::create);
     }
 
     @Override
     public <X extends Exception> Result<T> mapFailure(Class<X> exceptionClass,
                                                       Function<? super X, ? extends Exception> function) {
-        validate(exceptionClass, function);
+        requireNonNull(exceptionClass, function);
 
         return create(optionalValue);
     }
 
     @Override
-    public <U> Result<U> mapOptional(OptionalFunction<? super T, ? extends U> function) {
+    public <U> Result<U> mapOptional(Function<? super T, ? extends Optional<? extends U>> function) {
 
         Objects.requireNonNull(function);
 
-        //noinspection unchecked
-        return (Result<U>) optionalValue
-            .map(v -> Result.of(
+        Result<? extends U> result = optionalValue
+            .map(v -> Result.ofOptional(
                 () -> function.apply(v)
             ))
             .orElseGet(Success::create);
+
+        //noinspection unchecked
+        return (Result<U>) result;
     }
 
     @Override
@@ -156,16 +158,18 @@ final class Success<T> implements InternalResult<T>, Result<T> {
 
         Objects.requireNonNull(function);
 
-        //noinspection unchecked
-        return (Result<U>) optionalValue
-            .map(v -> Result.of(
+        Result<? extends U> result = optionalValue
+            .map(v -> Result.ofValue(
                 () -> function.apply(v)
             ))
             .orElseGet(Success::create);
+
+        //noinspection unchecked
+        return (Result<U>) result;
     }
 
     @Override
-    public T orElseRecover(SwitchSupplier<Exception, T> supplier) {
+    public T orElseRecover(SwitchSupplier<? super Exception, ? extends T> supplier) {
 
         Objects.requireNonNull(supplier);
 
@@ -179,7 +183,8 @@ final class Success<T> implements InternalResult<T>, Result<T> {
     }
 
     @Override
-    public <X extends Exception> Result<T> recover(Class<X> exceptionClass, Function<? super X, ? extends T> function) {
+    public <X extends Exception> Result<T> recover(Class<X> exceptionClass,
+                                                   ValueFunction<? super X, ? extends T> function) {
 
         return recoverValue(exceptionClass, function);
     }
@@ -193,8 +198,8 @@ final class Success<T> implements InternalResult<T>, Result<T> {
 
     @Override
     public <X extends Exception> Result<T> recoverOptional(Class<X> exceptionClass,
-                                                           OptionalFunction<? super X, ? extends T> function) {
-        validate(exceptionClass, function);
+                                                           Function<? super X, ? extends Optional<? extends T>> function) {
+        requireNonNull(exceptionClass, function);
 
         return create(optionalValue);
     }
@@ -202,7 +207,7 @@ final class Success<T> implements InternalResult<T>, Result<T> {
     @Override
     public <X extends Exception> Result<T> recoverValue(Class<X> exceptionClass,
                                                         Function<? super X, ? extends T> function) {
-        validate(exceptionClass, function);
+        requireNonNull(exceptionClass, function);
 
         return create(optionalValue);
     }
@@ -215,7 +220,7 @@ final class Success<T> implements InternalResult<T>, Result<T> {
             .toString();
     }
 
-    private <X extends Exception> void validate(Class<X> exceptionClass, Function<?, ?> function) {
+    private <X extends Exception> void requireNonNull(Class<X> exceptionClass, Function<?, ?> function) {
 
         Objects.requireNonNull(exceptionClass);
 

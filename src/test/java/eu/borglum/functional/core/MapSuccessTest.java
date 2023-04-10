@@ -1,20 +1,18 @@
 package eu.borglum.functional.core;
 
+import eu.borglum.functional.internal.InternalResult;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static eu.borglum.functional.core.TestDataFactory.create;
-import static eu.borglum.functional.core.TestDataFactory.mapAndThrow;
-import static eu.borglum.functional.core.TestDataFactory.mapOptionalAndThrow;
-import static eu.borglum.functional.core.TestDataFactory.mapOptionalToNull;
-import static eu.borglum.functional.core.TestDataFactory.mapToNull;
+import static eu.borglum.functional.TestDataFactory.create;
+import static eu.borglum.functional.TestDataFactory.mapAndThrow;
+import static eu.borglum.functional.TestDataFactory.mapOptionalAndThrow;
+import static eu.borglum.functional.TestDataFactory.mapOptionalToNull;
+import static eu.borglum.functional.TestDataFactory.mapToNull;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -29,7 +27,7 @@ class MapSuccessTest {
 
     @ParameterizedTest
     @MethodSource("provideMap")
-    void testMap(Result<String> initial, Function<? super String, ? extends String> mapFunction,
+    void testMap(Result<String> initial, ValueFunction<? super String, ? extends String> mapFunction,
                  Result<String> expected) {
 
         //when
@@ -45,8 +43,8 @@ class MapSuccessTest {
         Result<String> value = create("Value");
         Result<String> valueUpperCase = create("VALUE");
 
-        Function<? super String, ? extends String> identity = str -> str;
-        Function<? super String, ? extends String> toUpperCase = String::toUpperCase;
+        ValueFunction<? super String, ? extends String> identity = str -> str;
+        ValueFunction<? super String, ? extends String> toUpperCase = String::toUpperCase;
 
         return Stream.of(
             arguments(empty, identity, empty),
@@ -63,7 +61,7 @@ class MapSuccessTest {
 
     @ParameterizedTest
     @MethodSource("provideMapInvalid")
-    void testMapInvalid(Result<String> initial, Function<? super String, ? extends String> invalid) {
+    void testMapInvalid(Result<String> initial, ValueFunction<? super String, ? extends String> invalid) {
 
         //then
         assertThrows(NullPointerException.class, () -> initial.map(invalid));
@@ -161,24 +159,16 @@ class MapSuccessTest {
             "Value"::equals, String::toUpperCase
         );
 
-        Case<String, String> caseOtherValue = Case.of(
-            "OtherValue"::equals, String::toUpperCase
-        );
-
-        SwitchSupplier<String, String> switchOtherValueSupplier = () -> Switch.of(
-            Collections.singletonList(caseOtherValue)
-        );
-
         SwitchSupplier<String, String> switchValueSupplier = () -> Switch.of(
-            Collections.singletonList(caseValue)
+            caseValue
         );
 
         SwitchSupplier<String, String> switchSupplier = () -> Switch.of(
-            Arrays.asList(caseOtherValue, caseValue)
+            Case.of("OtherValue"::equals, String::toUpperCase),
+            caseValue
         );
 
         return Stream.of(
-            arguments(value, switchOtherValueSupplier, create(new CaseNotFoundException("Value"))),
             arguments(value, switchValueSupplier, create("VALUE")),
             arguments(value, switchSupplier, create("VALUE"))
         );
@@ -190,10 +180,11 @@ class MapSuccessTest {
 
     @ParameterizedTest
     @MethodSource("provideMapSwitchInvalid")
-    void testMapSwitchInvalid(Result<String> initial, SwitchSupplier<String, String> invalid) {
+    void testMapSwitchInvalid(Result<String> initial, SwitchSupplier<String, String> invalid,
+                              Class<? extends Exception> exceptionClass) {
 
         //when
-        assertThrows(NullPointerException.class, () -> initial.map(invalid));
+        assertThrows(exceptionClass, () -> initial.map(invalid));
     }
 
     private static Stream<Arguments> provideMapSwitchInvalid() {
@@ -201,15 +192,18 @@ class MapSuccessTest {
         Result<String> value = create("Value");
 
         SwitchSupplier<String, String> switchToNull = () -> Switch.of(
-            Collections.singletonList(
-                Case.of(str -> true, str -> null)
-            )
+            Case.of(str -> true, str -> null)
+        );
+
+        SwitchSupplier<String, String> switchOtherValueSupplier = () -> Switch.of(
+            Case.of("OtherValue"::equals, String::toUpperCase)
         );
 
         return Stream.of(
-            arguments(illegalState, null),
-            arguments(value, null),
-            arguments(value, switchToNull)
+            arguments(illegalState, null, NullPointerException.class),
+            arguments(value, null, NullPointerException.class),
+            arguments(value, switchToNull, NullPointerException.class),
+            arguments(value, switchOtherValueSupplier, CaseNotFoundException.class)
         );
     }
 }
