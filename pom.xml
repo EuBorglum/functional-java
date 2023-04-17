@@ -60,7 +60,7 @@
         <org.apache.maven.plugins.install.version>3.1.0</org.apache.maven.plugins.install.version>
         <org.apache.maven.plugins.javadoc.version>3.5.0</org.apache.maven.plugins.javadoc.version>
         <org.apache.maven.plugins.release.version>3.0.0-M7</org.apache.maven.plugins.release.version>
-        <org.apache.maven.plugins.resource.version>3.3.0</org.apache.maven.plugins.resource.version>
+        <org.apache.maven.plugins.resource.version>3.3.1</org.apache.maven.plugins.resource.version>
         <org.apache.maven.plugins.source.version>3.2.1</org.apache.maven.plugins.source.version>
         <org.apache.maven.plugins.surefire.version>3.0.0</org.apache.maven.plugins.surefire.version>
 
